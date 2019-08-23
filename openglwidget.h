@@ -32,7 +32,6 @@ private:
     void drawBorderImage(QPainter *painter, OTUI::CWidget* widget, int x, int y);
     void drawOutlines(QPainter* painter, int left, int top, int width, int height);
     void drawPivots(QPainter* painter, int left, int top, int width, int height);
-    bool mouseOverlap(int mouseX, int mouseY, int left, int top, int width, int height);
     bool checkChildrenOverlap(OTUI::CWidget* parent);
     void drawWidgetChildren(QPainter* painter, OTUI::CWidget* parent);
 
@@ -46,6 +45,7 @@ private:
     QBrush m_brushNormal;
     QBrush m_brushHover;
     QBrush m_brushSelected;
+    QPoint offset;
 };
 
 #endif // OPENGLWIDGET_H

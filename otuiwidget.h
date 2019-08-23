@@ -27,6 +27,9 @@ public:
     QPoint getPos() { return m_rect.topLeft(); }
     QPoint getSize() { return QPoint(m_rect.width(), m_rect.height()); }
     QRect getRect() { return m_rect; }
+    QRect getParentRect() { return QRect(getRect().left() + m_parent->getRect().left(),
+                                         getRect().top() + m_parent->getRect().top(),
+                                         getRect().right(), getRect().bottom()); }
     void setRect(int left, int top, int right, int bottom) {
         m_rect.setRect(left, top, right, bottom);
     }
@@ -46,6 +49,7 @@ public:
     }
 
     QString id;
+    CWidget* m_parent = nullptr;
     QVector<CWidget*> m_children;
     QRect m_imageBorder;
 

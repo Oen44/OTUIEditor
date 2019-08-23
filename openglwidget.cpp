@@ -24,6 +24,7 @@ void OpenGLWidget::initializeGL()
     OTUI::CWidget* widget = new OTUI::CWidget("mainWindow", ":/images/main_window.png");
     widget->setRect(50, 50, 256, 256);
     OTUI::CWidget* child = new OTUI::CWidget("button", ":/images/button_rounded.png");
+    child->m_parent = widget;
     child->setRect(50, 50, 106, 23);
     child->setImageCrop(0, 0, 22, 23);
     child->m_imageBorder = QRect(5, 5, 5, 5);
@@ -43,19 +44,31 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
     m_mousePos = QPoint(event->x(), event->y());
     if(m_selected != nullptr)
     {
-        if(m_mousePressed && mouseOverlap(m_mousePos.x(), m_mousePos.y(), m_selected->x(), m_selected->y(), m_selected->width(), m_selected->height()))
+        if(m_mousePressed)
         {
-            QPoint offset = m_mousePressedPos - m_selected->getRect().topLeft();
-            m_selected->setPos(m_mousePos - offset);
+            if(m_selected->m_parent != nullptr)
+            {
+                if(m_selected->getParentRect().contains(m_mousePos))
+                {
+                    m_selected->setPos(m_mousePos - offset);
+                }
+            }
+            else
+            {
+                if(m_selected->getRect().contains(m_mousePos))
+                {
+                    m_selected->setPos(m_mousePos - offset);
+                }
+            }
         }
     }
 }
 
 void OpenGLWidget::mousePressEvent(QMouseEvent *event)
 {
-    m_mousePressedPos = QPoint(event->x(), event->y());
     if(event->button() == Qt::MouseButton::LeftButton)
     {
+        m_mousePressedPos = QPoint(event->x(), event->y());
         m_mousePressed = true;
         bool selected = false;
         m_selected = nullptr;
@@ -66,11 +79,17 @@ void OpenGLWidget::mousePressEvent(QMouseEvent *event)
             if(selected)
                 break;
 
-            if(mouseOverlap(m_mousePressedPos.x(), m_mousePressedPos.y(), widget->x(), widget->y(), widget->width(), widget->height()))
+            if(widget->getRect().contains(m_mousePressedPos))
             {
                 m_selected = widget;
+                selected = true;
                 break;
             }
+        }
+
+        if(selected)
+        {
+            offset = m_mousePressedPos - m_selected->getRect().topLeft();
         }
     }
 }
@@ -80,7 +99,7 @@ bool OpenGLWidget::checkChildrenOverlap(OTUI::CWidget* parent)
     bool selected = false;
     for(OTUI::CWidget* child : parent->m_children)
     {
-        if(mouseOverlap(m_mousePressedPos.x(), m_mousePressedPos.y(), child->x() + parent->x(), child->y() + parent->y(), child->width(), child->height()))
+        if(QRect(child->x() + parent->x(), child->y() + parent->y(), child->width(), child->height()).contains(m_mousePressedPos))
         {
             m_selected = child;
             selected = true;
@@ -219,44 +238,52 @@ void OpenGLWidget::drawOutlines(QPainter *painter, int left, int top, int width,
 
 void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, int height)
 {
+    QRect rect(left - 2, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     QBrush brush = m_brushNormal;
-    if(m_mousePressed && mouseOverlap(m_mousePressedPos.x(), m_mousePressedPos.y(), left - 2, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushSelected;
-    else if(mouseOverlap(m_mousePos.x(), m_mousePos.y(), left - 2, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushHover;
+    if(rect.contains(m_mousePressedPos))
+    {
+        if(m_mousePressed)
+            brush = m_brushSelected;
+        else
+            brush = m_brushHover;
+    }
 
-    painter->fillRect(QRect(left - 2, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT), brush);
+    painter->fillRect(rect, brush);
 
     brush = m_brushNormal;
-    if(m_mousePressed && mouseOverlap(m_mousePressedPos.x(), m_mousePressedPos.y(), left + width - 6, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushSelected;
-    else if(mouseOverlap(m_mousePos.x(), m_mousePos.y(), left + width - 6, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushHover;
+    rect.setRect(left + width - 6, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT);
+    if(rect.contains(m_mousePressedPos))
+    {
+        if(m_mousePressed)
+            brush = m_brushSelected;
+        else
+            brush = m_brushHover;
+    }
 
     painter->fillRect(QRect(left + width - 6, top - 2, PIVOT_WIDTH, PIVOT_HEIGHT), brush);
 
     brush = m_brushNormal;
-    if(m_mousePressed && mouseOverlap(m_mousePressedPos.x(), m_mousePressedPos.y(), left - 2, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushSelected;
-    else if(mouseOverlap(m_mousePos.x(), m_mousePos.y(), left - 2, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushHover;
+    rect.setRect(left - 2, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT);
+    if(rect.contains(m_mousePressedPos))
+    {
+        if(m_mousePressed)
+            brush = m_brushSelected;
+        else
+            brush = m_brushHover;
+    }
 
     painter->fillRect(QRect(left - 2, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT), brush);
 
     brush = m_brushNormal;
-    if(m_mousePressed && mouseOverlap(m_mousePressedPos.x(), m_mousePressedPos.y(), left + width - 6, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushSelected;
-    else if(mouseOverlap(m_mousePos.x(), m_mousePos.y(), left + width - 6, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT))
-        brush = m_brushHover;
+    rect.setRect(left + width - 6, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT);
+    if(rect.contains(m_mousePressedPos))
+    {
+        if(m_mousePressed)
+            brush = m_brushSelected;
+        else
+            brush = m_brushHover;
+    }
 
     painter->fillRect(QRect(left + width - 6, top + height - 6, PIVOT_WIDTH, PIVOT_HEIGHT), brush);
 
-}
-
-bool OpenGLWidget::mouseOverlap(int mouseX, int mouseY, int left, int top, int width, int height)
-{
-    if(mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= top + height)
-        return true;
-
-    return false;
 }
