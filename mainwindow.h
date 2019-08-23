@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    void loadSettings();
+    void saveSettings();
+    QString m_sSettingsFile;
 };
 
 #endif // MAINWINDOW_H

@@ -79,7 +79,7 @@ QTreeView::branch:open:has-children:has-siblings  {
         </column>
         <item>
          <property name="text">
-          <string>CharactersListWindow (MainWindow)</string>
+          <string>MyWindow (MainWindow)</string>
          </property>
          <property name="icon">
           <iconset resource="resources.qrc">
@@ -87,61 +87,7 @@ QTreeView::branch:open:has-children:has-siblings  {
          </property>
          <item>
           <property name="text">
-           <string>PlayersList (TextList)</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/images/list_icon.png</normaloff>:/images/list_icon.png</iconset>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>ShowButton (Button)</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/images/button_icon.png</normaloff>:/images/button_icon.png</iconset>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>CloseButton (Button)</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/images/button_icon.png</normaloff>:/images/button_icon.png</iconset>
-          </property>
-         </item>
-        </item>
-        <item>
-         <property name="text">
-          <string>CharacterWindow (MainWindow)</string>
-         </property>
-         <property name="icon">
-          <iconset resource="resources.qrc">
-           <normaloff>:/images/window_icon.png</normaloff>:/images/window_icon.png</iconset>
-         </property>
-         <item>
-          <property name="text">
-           <string>CharacterNameLabel (Label)</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/images/label_icon.png</normaloff>:/images/label_icon.png</iconset>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>CharacterStatsLabel (Label)</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/images/label_icon.png</normaloff>:/images/label_icon.png</iconset>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>CloseButton (Button)</string>
+           <string>MyButton (Button)</string>
           </property>
           <property name="icon">
            <iconset resource="resources.qrc">

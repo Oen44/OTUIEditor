@@ -1,6 +1,7 @@
 #ifndef OPENGLWIDGET_H
 #define OPENGLWIDGET_H
 
+#include "const.h"
 #include "otuiwidget.h"
 #include <QPainter>
 #include <QOpenGLWidget>
@@ -41,6 +42,7 @@ private:
     QPoint m_mousePos;
     QPoint m_mousePressedPos;
     bool m_mousePressed;
+    OTUI::Pivot m_mousePressedPivot;
 
     QBrush m_brushNormal;
     QBrush m_brushHover;

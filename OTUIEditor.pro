@@ -33,6 +33,7 @@ SOURCES += \
         otuiwidget.cpp
 
 HEADERS += \
+        const.h \
         mainwindow.h \
         openglwidget.h \
         otuiwidget.h
@@ -48,5 +49,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     resources.qrc
 
-DISTFILES += \
-    .gitignore
+DISTFILES +=
