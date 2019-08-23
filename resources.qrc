@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/branch_closed.png</file>
+        <file>images/branch_open.png</file>
+        <file>images/button_icon.png</file>
+        <file>images/label_icon.png</file>
+        <file>images/list_icon.png</file>
+        <file>images/window_icon.png</file>
+        <file>images/main_window.png</file>
+        <file>images/button_rounded.png</file>
+    </qresource>
+</RCC>
