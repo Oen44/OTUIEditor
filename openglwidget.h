@@ -1,8 +1,10 @@
 #ifndef OPENGLWIDGET_H
 #define OPENGLWIDGET_H
 
+#include <memory>
 #include "const.h"
-#include "otuiwidget.h"
+#include "otui/otuiwidget.h"
+#include "mainwindow.h"
 #include <QPainter>
 #include <QOpenGLWidget>
 #include <QTime>
@@ -23,21 +25,28 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
+public:
+    void addWidget(OTUI::WidgetType type, QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
+    void addWidgetChild(OTUI::WidgetType type, QString parentId, QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
+
+private:
+    std::unique_ptr<OTUI::CWidget> initializeWidget(OTUI::WidgetType type, QString widgetId, QString imagePath6);
+
 private:
     const uint8_t LINE_WIDTH = 2;
     const uint8_t PIVOT_WIDTH = 8;
     const uint8_t PIVOT_HEIGHT = 8;
 
     void draw();
-    void drawBorderImage(QPainter *painter, OTUI::CWidget* widget);
-    void drawBorderImage(QPainter *painter, OTUI::CWidget* widget, int x, int y);
+    void drawBorderImage(QPainter *painter, OTUI::CWidget const& widget);
+    void drawBorderImage(QPainter *painter, OTUI::CWidget const& widget, int x, int y);
     void drawOutlines(QPainter* painter, int left, int top, int width, int height);
     void drawPivots(QPainter* painter, int left, int top, int width, int height);
-    bool checkChildrenOverlap(OTUI::CWidget* parent);
-    void drawWidgetChildren(QPainter* painter, OTUI::CWidget* parent);
+    bool checkChildrenOverlap(std::unique_ptr<OTUI::CWidget> const& parent);
+    void drawWidgetChildren(QPainter* painter, OTUI::CWidget const& parent);
 
-    QVector<OTUI::CWidget*> m_otuiWidgets;
-    OTUI::CWidget* m_selected;
+    std::vector<std::unique_ptr<OTUI::CWidget>> m_otuiWidgets;
+    OTUI::CWidget* m_selected = nullptr;
 
     QPoint m_mousePos;
     QPoint m_mousePressedPos;

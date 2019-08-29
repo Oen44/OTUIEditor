@@ -46,55 +46,20 @@
       </property>
       <item>
        <widget class="QTreeWidget" name="treeWidget">
-        <property name="styleSheet">
-         <string notr="true">QTreeWidget {
-	color: #fff;
-	background-color: #121212;
-	border: none;
-}
-
-QTreeWidget QHeaderView::section {
-	padding-left: 5px;
-	color: #fff;
-	background-color: #2A2A2A;
-	border: none;
-}
-
-QTreeView::branch:has-children:!has-siblings:closed,
-QTreeView::branch:closed:has-children:has-siblings {
-	border-image: none;
-	image: url(&quot;:/images/branch_closed.png&quot;);
-}
-
-QTreeView::branch:open:has-children:!has-siblings,
-QTreeView::branch:open:has-children:has-siblings  {
-	 border-image: none;
-	image: url(&quot;:/images/branch_open.png&quot;);
-}</string>
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
+        <property name="showDropIndicator" stdset="0">
+         <bool>false</bool>
+        </property>
+        <property name="animated">
+         <bool>true</bool>
         </property>
         <column>
          <property name="text">
           <string>Widgets List</string>
          </property>
         </column>
-        <item>
-         <property name="text">
-          <string>MyWindow (MainWindow)</string>
-         </property>
-         <property name="icon">
-          <iconset resource="resources.qrc">
-           <normaloff>:/images/window_icon.png</normaloff>:/images/window_icon.png</iconset>
-         </property>
-         <item>
-          <property name="text">
-           <string>MyButton (Button)</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/images/button_icon.png</normaloff>:/images/button_icon.png</iconset>
-          </property>
-         </item>
-        </item>
        </widget>
       </item>
       <item>
@@ -114,31 +79,7 @@ QTreeView::branch:open:has-children:has-siblings  {
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QMenuBar {
-	color: #fff;
-	background-color: #121212;
-}
-
-QMenuBar::item:selected {
-	background-color: #545454;
-}
-
-QMenu {
-	color: #fff;
-	background-color: #2A2A2A;
-	border: 1px solid #121212;
-}
-
-QMenu::item {
-    padding: 2px 25px 2px 20px;
-    border: 1px solid transparent;
-}
-
-QMenu::item:selected {
-	border-color: #4FA0F1;
-	background-color: #27609A;
-}
-</string>
+    <string notr="true"/>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -180,6 +121,26 @@ QMenu::item:selected {
     <bool>false</bool>
    </property>
   </action>
+  <action name="newMainWindow">
+   <property name="text">
+    <string>MainWindow</string>
+   </property>
+  </action>
+  <action name="newButton">
+   <property name="text">
+    <string>Button</string>
+   </property>
+  </action>
+  <action name="newLabel">
+   <property name="text">
+    <string>Label</string>
+   </property>
+  </action>
+  <action name="actionDeleteWidget">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -189,8 +150,6 @@ QMenu::item:selected {
    <header>openglwidget.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -22,7 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++11
+CONFIG += c++14
 
 LIBS += -LD:\Qt\5.13.0\mingw73_32\lib\libQt5OpenGL.a -lopengl32
 
@@ -30,13 +30,20 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         openglwidget.cpp \
-        otuiwidget.cpp
+        otui/cbutton.cpp \
+        otui/clabel.cpp \
+        otui/cmainwindow.cpp \
+        otui/otuiwidget.cpp
 
 HEADERS += \
         const.h \
         mainwindow.h \
         openglwidget.h \
-        otuiwidget.h
+        otui/cbutton.h \
+        otui/clabel.h \
+        otui/cmainwindow.h \
+        otui/otui.h \
+        otui/otuiwidget.h
 
 FORMS += \
         mainwindow.ui
@@ -49,4 +56,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     resources.qrc
 
-DISTFILES +=
+DISTFILES += \
+    stylesheet.css
