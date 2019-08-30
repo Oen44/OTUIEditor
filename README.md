@@ -4,8 +4,7 @@
 
 ## About
 
-Visual OTUI designer with .OTUI file generator.
-
+Visual OTUI designer with .OTUI file generator. [YouTube Video](https://www.youtube.com/watch?v=CQBn6jFqhlI)
 ![](preview.gif)
 
 ## Build
