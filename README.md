@@ -26,9 +26,9 @@ Visual OTUI designer with .OTUI file generator.
 - [ ] OTUI::Label class
 - [ ] OTUI::Button class
 - [ ] OTUI::Image class
-- [ ] Adding and removing widgets
-- [ ] Using Widgets List Tree to manipulate widget properties
-- [ ] Selected widget properties window
+- [x] Adding and removing widgets
+- [x] Using Widgets List Tree to manipulate widget properties
+- [x] Selected widget properties window
 - [ ] Loading images from a directory
 - [ ] OTUI file serialization
 - [ ] OTUI file deserialization
