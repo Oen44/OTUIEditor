@@ -22,28 +22,40 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++14
+CONFIG += c++14 debug_and_release
 
-LIBS += -LD:\Qt\5.13.0\mingw73_32\lib\libQt5OpenGL.a -lopengl32
+LIBS += -L"$$PWD/lib" -LD:\Qt\5.13.0\mingw73_32\lib\libQt5OpenGL.a -lopengl32
 
 SOURCES += \
+        corewindow.cpp \
+        events/setidevent.cpp \
         main.cpp \
-        mainwindow.cpp \
         openglwidget.cpp \
-        otui/cbutton.cpp \
-        otui/clabel.cpp \
-        otui/cmainwindow.cpp \
-        otui/otuiwidget.cpp
+        otui/button.cpp \
+        otui/label.cpp \
+        otui/mainwindow.cpp \
+        otui/widget.cpp \
+        types/CustomTypes.cpp \
+        types/point.cpp \
+        types/vector2.cpp \
+        types/vector3.cpp
 
 HEADERS += \
+        Property.h \
         const.h \
-        mainwindow.h \
+        corewindow.h \
+        events/setidevent.h \
         openglwidget.h \
-        otui/cbutton.h \
-        otui/clabel.h \
-        otui/cmainwindow.h \
+        otui/button.h \
+        otui/label.h \
+        otui/mainwindow.h \
         otui/otui.h \
-        otui/otuiwidget.h
+        otui/widget.h \
+        qpropertyeditorwidget.h \
+        types/CustomTypes.h \
+        types/point.h \
+        types/vector2.h \
+        types/vector3.h
 
 FORMS += \
         mainwindow.ui
@@ -58,3 +70,12 @@ RESOURCES += \
 
 DISTFILES += \
     stylesheet.css
+
+
+CONFIG(debug, debug|release) {
+        LIBS += -lQPropertyEditord
+}
+
+CONFIG(release, debug|release) {
+        LIBS += -lQPropertyEditor
+}

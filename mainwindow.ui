@@ -16,6 +16,9 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::ClickFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>OTUI Editor</string>
   </property>
@@ -40,30 +43,35 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
       <property name="spacing">
        <number>0</number>
       </property>
       <item>
-       <widget class="QTreeWidget" name="treeWidget">
+       <widget class="QTreeView" name="treeView">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="contextMenuPolicy">
          <enum>Qt::CustomContextMenu</enum>
         </property>
-        <property name="showDropIndicator" stdset="0">
-         <bool>false</bool>
-        </property>
-        <property name="animated">
-         <bool>true</bool>
-        </property>
-        <column>
-         <property name="text">
-          <string>Widgets List</string>
-         </property>
-        </column>
        </widget>
       </item>
       <item>
-       <widget class="OpenGLWidget" name="openGLWidget"/>
+       <widget class="OpenGLWidget" name="openGLWidget">
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPropertyEditorWidget" name="propertyEditor"/>
       </item>
      </layout>
     </item>
@@ -144,6 +152,11 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>QPropertyEditorWidget</class>
+   <extends>QTreeView</extends>
+   <header>qpropertyeditorwidget.h</header>
+  </customwidget>
   <customwidget>
    <class>OpenGLWidget</class>
    <extends>QOpenGLWidget</extends>

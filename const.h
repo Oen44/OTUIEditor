@@ -2,6 +2,7 @@
 #define CONST_H
 
 #include <iterator>
+#include <unordered_map>
 
 namespace OTUI {
     enum Pivot {
@@ -10,6 +11,16 @@ namespace OTUI {
         TopRight,
         BottomLeft,
         BottomRight
+    };
+
+    const std::unordered_map<std::string, int> WidgetProperties = {
+        {"sword", 0},
+        {"club", 1},
+        {"axe", 2},
+        {"shield", 3},
+        {"distance", 4},
+        {"wand", 5},
+        {"ammunition", 6},
     };
 
     template <typename T>

@@ -1,31 +1,46 @@
-#ifndef OTUICWIDGET_H
-#define OTUICWIDGET_H
+#ifndef OTUIWIDGET_H
+#define OTUIWIDGET_H
 
 #include <memory>
+#include <QObject>
 #include <QImage>
 #include <QPainter>
+#include <QCoreApplication>
+#include "events/setidevent.h"
+#include "types/CustomTypes.h"
 
 namespace OTUI {
-    class CWidget
+    class Widget : public QObject
     {
+        Q_OBJECT
+
+        Q_PROPERTY(QString Id READ getId WRITE setIdProperty DESIGNABLE true USER true)
+        Q_PROPERTY(Vec2 Position READ getPosition WRITE setPosition DESIGNABLE true USER true)
+        Q_PROPERTY(Point Size READ getSizeProperty WRITE setSizeProperty DESIGNABLE true USER true)
+
     public:
-        CWidget();
-        CWidget(QString widgetId, QString imagePath);
-        virtual ~CWidget();
+        Widget();
+        Widget(QString widgetId, QString imagePath);
+        virtual ~Widget() = default;
 
     public:
         virtual void draw(QPainter*) {}
 
     public:
-        bool operator == (const CWidget &Ref) const
+        bool operator == (const Widget &Ref) const
         {
             return(this->getId() == Ref.getId());
         }
 
         QString getId() const { return m_id; }
-        void setId(QString id) {
-            m_id = id;
-        }
+        void setIdProperty(const QString& id);
+        void setId(const QString id);
+
+        Vec2 getPosition() const { return Vec2(getPos().x(), getPos().y()); }
+        void setPosition(const Vec2& position);
+
+        Point getSizeProperty() const { return Point(width(), height()); }
+        void setSizeProperty(const Point& size);
 
         QImage image() const { return m_image; }
 
@@ -68,18 +83,13 @@ namespace OTUI {
             m_imageBorder = border;
         }
 
-        OTUI::CWidget* getParent() const { return m_parent; }
-        void setParent(OTUI::CWidget* parent) {
+        OTUI::Widget* getParent() const { return m_parent; }
+        void setParent(OTUI::Widget* parent) {
             m_parent = parent;
         }
 
-        std::vector<std::unique_ptr<OTUI::CWidget>> const& getChildren() const { return m_children; }
-        void addChild(std::unique_ptr<OTUI::CWidget>& child) {
-            m_children.push_back(std::move(child));
-        }
-
-    private:
-        QString m_id;
+    protected:
+        QString m_id = nullptr;
         QRect m_rect;
 
         QImage m_image;
@@ -87,9 +97,8 @@ namespace OTUI {
         QRect m_imageCrop;
         QRect m_imageBorder;
 
-        OTUI::CWidget* m_parent = nullptr;
-        std::vector<std::unique_ptr<OTUI::CWidget>> m_children;
+        OTUI::Widget* m_parent = nullptr;
     };
 }
 
-#endif // OTUICWIDGET_H
+#endif // OTUIWIDGET_H

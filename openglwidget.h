@@ -3,13 +3,11 @@
 
 #include <memory>
 #include "const.h"
-#include "otui/otuiwidget.h"
-#include "mainwindow.h"
+#include "otui/otui.h"
+#include "corewindow.h"
 #include <QPainter>
 #include <QOpenGLWidget>
 #include <QTime>
-
-class CWidget;
 
 class OpenGLWidget : public QOpenGLWidget
 {
@@ -24,13 +22,28 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void keyReleaseEvent(QKeyEvent* event);
 
 public:
-    void addWidget(OTUI::WidgetType type, QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
-    void addWidgetChild(OTUI::WidgetType type, QString parentId, QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
+    OTUI::Widget* addWidget(OTUI::WidgetType type, QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
+    OTUI::Widget* addWidgetChild(OTUI::WidgetType type, QString parentId, QString& widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
+    std::vector<std::unique_ptr<OTUI::Widget>> const& getOTUIWidgets() const { return m_otuiWidgets; }
+    void deleteWidget(QString widgetId) {
+        auto itr = std::find_if(std::begin(m_otuiWidgets),
+                                std::end(m_otuiWidgets),
+                                [widgetId](auto &element) { return element.get()->getId() == widgetId;});
+        m_otuiWidgets.erase(itr);
+        m_selected = nullptr;
+    }
+    void clearWidgets() {
+        m_selected = nullptr;
+        m_otuiWidgets.clear();
+    }
+
+    OTUI::Widget* m_selected = nullptr;
 
 private:
-    std::unique_ptr<OTUI::CWidget> initializeWidget(OTUI::WidgetType type, QString widgetId, QString imagePath6);
+    std::unique_ptr<OTUI::Widget> initializeWidget(OTUI::WidgetType type, QString widgetId, QString imagePath6);
 
 private:
     const uint8_t LINE_WIDTH = 2;
@@ -38,15 +51,12 @@ private:
     const uint8_t PIVOT_HEIGHT = 8;
 
     void draw();
-    void drawBorderImage(QPainter *painter, OTUI::CWidget const& widget);
-    void drawBorderImage(QPainter *painter, OTUI::CWidget const& widget, int x, int y);
+    void drawBorderImage(QPainter *painter, OTUI::Widget const& widget);
+    void drawBorderImage(QPainter *painter, OTUI::Widget const& widget, int x, int y);
     void drawOutlines(QPainter* painter, int left, int top, int width, int height);
     void drawPivots(QPainter* painter, int left, int top, int width, int height);
-    bool checkChildrenOverlap(std::unique_ptr<OTUI::CWidget> const& parent);
-    void drawWidgetChildren(QPainter* painter, OTUI::CWidget const& parent);
 
-    std::vector<std::unique_ptr<OTUI::CWidget>> m_otuiWidgets;
-    OTUI::CWidget* m_selected = nullptr;
+    std::vector<std::unique_ptr<OTUI::Widget>> m_otuiWidgets;
 
     QPoint m_mousePos;
     QPoint m_mousePressedPos;

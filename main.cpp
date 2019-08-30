@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "corewindow.h"
 #include <QApplication>
 #include <QFile>
 #include <QSurfaceFormat>
@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     File.open(QFile::ReadOnly);
     a.setStyleSheet(File.readAll());
 
-    MainWindow w;
+    CoreWindow w;
     w.show();
 
     return a.exec();

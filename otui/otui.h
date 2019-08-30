@@ -1,20 +1,21 @@
-#ifndef OTUI_H
-#define OTUI_H
+#ifndef OTUICONST_H
+#define OTUICONST_H
 
-#include "cmainwindow.h"
-#include "cbutton.h"
-#include "clabel.h"
-
-class CMainWindow;
-class CButton;
-class CLabel;
+#include "widget.h"
+#include "mainwindow.h"
+#include "button.h"
+#include "label.h"
 
 namespace OTUI {
+    class Widget;
+    class MainWindow;
+    class Button;
+    class Label;
     enum WidgetType {
-        MainWindow,
-        Button,
-        Label
+        MainWindowType,
+        ButtonType,
+        LabelType
     };
 }
 
-#endif // OTUI_H
+#endif // OTUICONST_H
