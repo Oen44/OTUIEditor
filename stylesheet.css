@@ -10,10 +10,6 @@ QTreeView QHeaderView::section {
     background-color: #2A2A2A;
 }
 
-Property, QProperty, QProeprtyModel, QVariantDelegate {
-    border: 1px solid red;
-}
-
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
     border-image: none;
