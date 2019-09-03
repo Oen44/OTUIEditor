@@ -128,15 +128,21 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
     m_mousePos = QPoint(event->x(), event->y());
     if(m_selected != nullptr)
     {
+        OTUI::Widget* parent = m_selected->getParent();
+        QRect parentBorder = QRect();
+        if(parent != nullptr)
+        {
+            parentBorder = parent->getImageBorder();
+        }
         if(m_mousePressed)
         {
             if(m_mousePressedPivot != OTUI::NoPivot)
             {
                 QRect* rect = m_selected->getRect();
                 QPoint parentOffset(0, 0);
-                if(m_selected->getParent() != nullptr)
+                if(parent != nullptr)
                 {
-                    parentOffset = QPoint(m_selected->getParent()->x(), m_selected->getParent()->y());
+                    parentOffset = QPoint(parent->x(), parent->y());
                 }
 
                 switch (m_mousePressedPivot) {
@@ -160,37 +166,47 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
                     break;
                 }
 
-                if(rect->left() < 1)
-                    rect->setLeft(1);
-                if(rect->top() < 1)
-                    rect->setTop(1);
+                int left = 1;
+                int top = 1;
 
-                if(m_selected->getParent() != nullptr)
+                if(parent != nullptr)
                 {
-                    if(rect->right() > m_selected->getParent()->width())
-                        rect->setRight(m_selected->getParent()->width());
-                    if(rect->bottom() > m_selected->getParent()->height())
-                        rect->setBottom(m_selected->getParent()->height());
+                    left = parentBorder.x();
+                    top = parentBorder.y();
+                }
+
+                if(rect->left() < left)
+                    rect->setLeft(left);
+                if(rect->top() < top)
+                    rect->setTop(top);
+
+                if(parent != nullptr)
+                {
+
+                    if(rect->right() > parent->width() - parentBorder.width())
+                        rect->setRight(parent->width() - parentBorder.width());
+                    if(rect->bottom() > parent->height() - parentBorder.height())
+                        rect->setBottom(parent->height() - parentBorder.height());
                 }
             }
             else
             {
-                if(m_selected->getParent() != nullptr)
+                if(parent != nullptr)
                 {
                     if(m_selected->getParentRect().contains(m_mousePos))
                     {
                         QPoint newPos(m_mousePos - offset);
                         m_selected->setPos(newPos);
 
-                        if(m_selected->x() < 0)
-                            newPos.setX(0);
-                        if(m_selected->y() < 0)
-                            newPos.setY(0);
+                        if(m_selected->x() < parentBorder.x())
+                            newPos.setX(parentBorder.x());
+                        if(m_selected->y() < parentBorder.y())
+                            newPos.setY(parentBorder.y());
 
-                        if(m_selected->x() + m_selected->width() > m_selected->getParent()->width())
-                            newPos.setX(m_selected->getParent()->width() - m_selected->width());
-                        if(m_selected->y() + m_selected->height() > m_selected->getParent()->height())
-                            newPos.setY(m_selected->getParent()->height() - m_selected->height());
+                        if(m_selected->x() + m_selected->width() > parent->width() - parentBorder.width())
+                            newPos.setX(parent->width() - m_selected->width() - parentBorder.width());
+                        if(m_selected->y() + m_selected->height() > parent->height() - parentBorder.height())
+                            newPos.setY(parent->height() - m_selected->height() - parentBorder.height());
 
                         m_selected->setPos(newPos);
                     }
@@ -284,19 +300,23 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
     }
     }
 
-    if(m_selected->getParent() != nullptr)
+    OTUI::Widget* parent = m_selected->getParent();
+
+    if(parent != nullptr)
     {
         m_selected->setPos(newPos);
 
-        if(m_selected->x() < 0)
-            newPos.setX(0);
-        if(m_selected->y() < 0)
-            newPos.setY(0);
+        QRect parentBorder = parent->getImageBorder();
 
-        if(m_selected->x() + m_selected->width() > m_selected->getParent()->width())
-            newPos.setX(m_selected->getParent()->width() - m_selected->width());
-        if(m_selected->y() + m_selected->height() > m_selected->getParent()->height())
-            newPos.setY(m_selected->getParent()->height() - m_selected->height());
+        if(m_selected->x() < parentBorder.x())
+            newPos.setX(parentBorder.x());
+        if(m_selected->y() < parentBorder.y())
+            newPos.setY(parentBorder.y());
+
+        if(m_selected->x() + m_selected->width() > parent->width() - parentBorder.width())
+            newPos.setX(parent->width() - m_selected->width() - parentBorder.width());
+        if(m_selected->y() + m_selected->height() > parent->height() - parentBorder.height())
+            newPos.setY(parent->height() - m_selected->height() - parentBorder.height());
 
         m_selected->setPos(newPos);
     }
@@ -361,10 +381,10 @@ void OpenGLWidget::drawBorderImage(QPainter *painter, OTUI::Widget const& widget
 
 void OpenGLWidget::drawBorderImage(QPainter *painter, OTUI::Widget const& widget, int x, int y)
 {
-    int top = widget.getImageBorder().top();
-    int bottom = widget.getImageBorder().bottom();
-    int left =  widget.getImageBorder().left();
-    int right  = widget.getImageBorder().right();
+    int top = widget.getImageBorder().y();
+    int bottom = widget.getImageBorder().height();
+    int left =  widget.getImageBorder().x();
+    int right  = widget.getImageBorder().width();
 
     // calculates border coords
     const QRect clip = widget.getImageCrop();
