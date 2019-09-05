@@ -35,6 +35,7 @@ SOURCES += \
         otui/label.cpp \
         otui/mainwindow.cpp \
         otui/widget.cpp \
+        startupwindow.cpp \
         types/CustomTypes.cpp \
         types/point.cpp \
         types/vector2.cpp \
@@ -52,13 +53,15 @@ HEADERS += \
         otui/otui.h \
         otui/widget.h \
         qpropertyeditorwidget.h \
+        startupwindow.h \
         types/CustomTypes.h \
         types/point.h \
         types/vector2.h \
         types/vector3.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        startupwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
