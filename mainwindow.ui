@@ -93,14 +93,14 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuRecents_Projects">
+    <widget class="QMenu" name="menuRecentProjects">
      <property name="title">
-      <string>Recents Projects</string>
+      <string>Recent Projects</string>
      </property>
     </widget>
     <addaction name="actionNewProject"/>
     <addaction name="actionOpenProject"/>
-    <addaction name="menuRecents_Projects"/>
+    <addaction name="menuRecentProjects"/>
     <addaction name="separator"/>
     <addaction name="actionSaveProject"/>
     <addaction name="actionCloseProject"/>

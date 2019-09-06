@@ -334,12 +334,4 @@ void CoreWindow::on_actionSaveProject_triggered()
         // Project exists
         // Update file
     }
-    QString fileName = QFileDialog::getSaveFileName(this,
-                                                    "Save Project",
-                                                    "D:/Main Files/Tibia/OTUI Editor/project_name.pro",
-                                                    "Project File (*.pro)");
-    /*QFile file(fileName);
-    file.open(QIODevice::WriteOnly);
-    QDataStream out(&file);
-    out << QString("the answer is");*/
 }
