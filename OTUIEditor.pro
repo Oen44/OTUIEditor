@@ -35,6 +35,7 @@ SOURCES += \
         otui/label.cpp \
         otui/mainwindow.cpp \
         otui/widget.cpp \
+        recentproject.cpp \
         startupwindow.cpp \
         types/CustomTypes.cpp \
         types/point.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
         otui/otui.h \
         otui/widget.h \
         qpropertyeditorwidget.h \
+        recentproject.h \
         startupwindow.h \
         types/CustomTypes.h \
         types/point.h \

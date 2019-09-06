@@ -20,7 +20,7 @@
    <enum>Qt::ClickFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>OTUI Editor</string>
+   <string>Project Name - OTUI Editor</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -97,7 +97,6 @@
      <property name="title">
       <string>Recents Projects</string>
      </property>
-     <addaction name="actionmy_project"/>
     </widget>
     <addaction name="actionNewProject"/>
     <addaction name="actionOpenProject"/>
@@ -191,6 +190,9 @@
    <property name="toolTip">
     <string>Save Project</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
    </property>
@@ -204,11 +206,6 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionmy_project">
-   <property name="text">
-    <string>D:\Main Files\Qt\Projects\ShopWindow\shopwindow.project</string>
    </property>
   </action>
   <action name="actionPaste">

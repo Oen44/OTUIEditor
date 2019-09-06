@@ -4,6 +4,7 @@
 
 #include <QSettings>
 #include <QDebug>
+#include <QFileDialog>
 
 CoreWindow::CoreWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,6 +35,7 @@ CoreWindow::CoreWindow(QWidget *parent) :
 
 CoreWindow::~CoreWindow()
 {
+    projectFile.close();
     delete ui;
 }
 
@@ -42,6 +44,38 @@ void CoreWindow::ShowError(QString title, QString description)
     QMessageBox messageBox;
     messageBox.critical(nullptr, title, description);
     messageBox.setFixedSize(300, 80);
+}
+
+void CoreWindow::startNewProject(QString name, QString path)
+{
+    projectName = name;
+    projectPath = path;
+    QString fileName(name.toLower().replace(' ', '_') + ".pro");
+
+    projectFile.setFileName(path + "/" + fileName);
+    if (!projectFile.open(QIODevice::ReadWrite))
+        return;
+
+    QDataStream data(&projectFile);
+    data << projectName;
+    projectFile.flush();
+
+    setWindowTitle(projectName + " - OTUI Editor");
+}
+
+void CoreWindow::loadProjectData(QDataStream& data, QString path)
+{
+    data >> projectName;
+    projectPath = path;
+
+    QString fileName(projectName.toLower().replace(' ', '_') + ".pro");
+    projectFile.setFileName(path + "/" + fileName);
+    if (!projectFile.open(QIODevice::ReadWrite))
+        return;
+
+    // TODO: Initialize widgets
+
+    setWindowTitle(projectName + " - OTUI Editor");
 }
 
 void CoreWindow::loadSettings()
@@ -263,4 +297,49 @@ bool CoreWindow::event(QEvent* event)
     }
 
     return QMainWindow::event(event);
+}
+
+void CoreWindow::on_actionNewProject_triggered()
+{
+    // TODO: ask to save current project
+
+    if(projectFile.isOpen())
+    {
+        projectFile.close();
+    }
+
+    // Clear tree
+    model->clear();
+
+    // Clear properties
+    ui->propertyEditor->clear();
+
+    // Clear selected
+    m_selected = nullptr;
+
+    // Clear widgets
+    ui->openGLWidget->clearWidgets();
+}
+
+void CoreWindow::on_actionSaveProject_triggered()
+{
+    if(projectName.isEmpty() && projectPath.isEmpty())
+    {
+        // New project
+        // Create file
+        // Assign name and path
+    }
+    else
+    {
+        // Project exists
+        // Update file
+    }
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    "Save Project",
+                                                    "D:/Main Files/Tibia/OTUI Editor/project_name.pro",
+                                                    "Project File (*.pro)");
+    /*QFile file(fileName);
+    file.open(QIODevice::WriteOnly);
+    QDataStream out(&file);
+    out << QString("the answer is");*/
 }

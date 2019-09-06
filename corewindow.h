@@ -22,6 +22,9 @@ public:
     ~CoreWindow();
     static void ShowError(QString title, QString description);
 
+    void startNewProject(QString name, QString path);
+    void loadProjectData(QDataStream& data, QString path);
+
 private slots:
     void on_newMainWindow_triggered();
 
@@ -33,6 +36,10 @@ private slots:
 
     void on_treeView_customContextMenuRequested(const QPoint &pos);
 
+    void on_actionNewProject_triggered();
+
+    void on_actionSaveProject_triggered();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     void keyReleaseEvent(QKeyEvent* event);
@@ -40,6 +47,11 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+
+    QString projectName;
+    QString projectPath;
+    QFile projectFile;
+
     QStandardItemModel* model = nullptr;
 
     void addChildToTree(QString label);
@@ -50,8 +62,6 @@ private:
     QString m_sSettingsFile;
 
     OTUI::Widget* m_selected = nullptr;
-
-    OTUI::Widget* m_widgetClass;
 };
 
 #endif // COREWINDOW_H

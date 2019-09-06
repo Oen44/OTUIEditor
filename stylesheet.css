@@ -1,3 +1,40 @@
+QMainWindow {
+    background-color: #121212;
+}
+
+QLabel {
+   color: #fff;
+}
+
+QPushButton {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+QPushButton:hover {
+    background-color: #222;
+}
+
+RecentProject {
+    padding: 10px;
+}
+
+RecentProject:hover {
+    background-color: #222;
+}
+
+QLineEdit {
+    background: #2A2A2A;
+    color: #cfd0d7;
+    border: 1px solid #525252;
+    padding: 4px;
+}
+
+QLineEdit:focus {
+    border-color: #747474;
+}
+
 QTreeView {
     color: #fff;
     background-color: #121212;
