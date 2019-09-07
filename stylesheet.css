@@ -2,17 +2,17 @@ QMainWindow {
     background-color: #121212;
 }
 
-QLabel {
-   color: #fff;
+#nameError, #pathError {
+    color: #7C0000;
 }
 
-QPushButton {
+QPushButton[flat="true"] {
     background-color: transparent;
     border: 1px solid #fff;
     color: #fff;
 }
 
-QPushButton:hover {
+QPushButton[flat="true"]:hover {
     background-color: #222;
 }
 
