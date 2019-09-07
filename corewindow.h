@@ -40,13 +40,18 @@ private slots:
 
     void on_actionSaveProject_triggered();
 
+    void on_actionCloseProject_triggered();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     void keyReleaseEvent(QKeyEvent* event);
     bool event(QEvent* event);
+    void closeEvent(QCloseEvent* event);
 
 private:
     Ui::MainWindow *ui;
+
+    bool projectChanged = false;
 
     QString projectName;
     QString projectPath;

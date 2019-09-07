@@ -1,6 +1,7 @@
 #include "corewindow.h"
 #include "ui_mainwindow.h"
 #include "types/CustomTypes.h"
+#include "startupwindow.h"
 
 #include <QSettings>
 #include <QDebug>
@@ -53,7 +54,7 @@ void CoreWindow::startNewProject(QString name, QString path)
     QString fileName(name.toLower().replace(' ', '_') + ".pro");
 
     projectFile.setFileName(path + "/" + fileName);
-    if (!projectFile.open(QIODevice::ReadWrite))
+    if(!projectFile.open(QIODevice::ReadWrite))
         return;
 
     QDataStream data(&projectFile);
@@ -70,7 +71,7 @@ void CoreWindow::loadProjectData(QDataStream& data, QString path)
 
     QString fileName(projectName.toLower().replace(' ', '_') + ".pro");
     projectFile.setFileName(path + "/" + fileName);
-    if (!projectFile.open(QIODevice::ReadWrite))
+    if(!projectFile.open(QIODevice::ReadWrite))
         return;
 
     // TODO: Initialize widgets
@@ -221,7 +222,7 @@ void CoreWindow::selectWidgetById(QString widgetId)
 
 bool CoreWindow::eventFilter(QObject*, QEvent* event)
 {
-    if (event->type() == QEvent::MouseButtonRelease) {
+    if(event->type() == QEvent::MouseButtonRelease) {
         if(m_selected != nullptr)
         {
             if(ui->openGLWidget->m_selected != nullptr)
@@ -299,6 +300,25 @@ bool CoreWindow::event(QEvent* event)
     return QMainWindow::event(event);
 }
 
+void CoreWindow::closeEvent(QCloseEvent *event)
+{
+    QMessageBox box;
+    QMessageBox::StandardButton response = box.question(this, "Save Changes",
+                 "Do you want to save this project before closing?",
+                 QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+                 QMessageBox::Yes);
+
+    if(response == QMessageBox::Yes)
+    {
+        // TODO: Save project
+        event->accept();
+    }
+    else if(response == QMessageBox::No)
+        event->accept();
+    else
+        event->ignore();
+}
+
 void CoreWindow::on_actionNewProject_triggered()
 {
     // TODO: ask to save current project
@@ -323,15 +343,30 @@ void CoreWindow::on_actionNewProject_triggered()
 
 void CoreWindow::on_actionSaveProject_triggered()
 {
-    if(projectName.isEmpty() && projectPath.isEmpty())
+    // Save changes
+}
+
+void CoreWindow::on_actionCloseProject_triggered()
+{
+    if(projectChanged)
     {
-        // New project
-        // Create file
-        // Assign name and path
+        QMessageBox box;
+        QMessageBox::StandardButton response = box.question(this, "Save Changes",
+                     "Do you want to save this project before closing?",
+                     QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+                     QMessageBox::Yes);
+
+        if(response == QMessageBox::Yes)
+        {
+            // TODO: Save changes
+        }
+        else if(response == QMessageBox::Cancel)
+            return;
     }
-    else
-    {
-        // Project exists
-        // Update file
-    }
+
+    projectFile.close();
+    StartupWindow* w = new StartupWindow();
+    w->show();
+    hide();
+
 }
