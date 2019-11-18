@@ -24,8 +24,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++14 debug_and_release
 
-LIBS += -L"$$PWD/lib" -LD:\Qt\5.13.0\mingw73_32\lib\libQt5OpenGL.a -lopengl32
-
 SOURCES += \
         corewindow.cpp \
         events/setidevent.cpp \
@@ -74,6 +72,7 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES += \
+    lib/libQPropertyEditord.a \
     stylesheet.css
 
 
@@ -84,3 +83,5 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
         LIBS += -lQPropertyEditor
 }
+
+unix:!macx: LIBS += -lQt5OpenGL
