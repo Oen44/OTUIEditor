@@ -137,10 +137,10 @@ void StartupWindow::on_createProject_clicked()
     std::rotate(m_recentProjects.rbegin(), m_recentProjects.rbegin() + 1, m_recentProjects.rend());
 
     data << static_cast<uint8_t>(m_recentProjects.size());
-    for(auto& r : m_recentProjects) {
-        data << r->name;
-        data << r->path;
-        data << r->date;
+    for(auto& recent : m_recentProjects) {
+        data << recent->name;
+        data << recent->path;
+        data << recent->date;
     }
 
     recentFile.close();

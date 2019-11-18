@@ -51,11 +51,7 @@ protected:
 private:
     Ui::MainWindow *ui;
 
-    bool projectChanged = false;
-
-    QString projectName;
-    QString projectPath;
-    QFile projectFile;
+    OTUI::Project m_Project;
 
     QStandardItemModel* model = nullptr;
 

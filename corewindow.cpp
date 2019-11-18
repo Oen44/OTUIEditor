@@ -36,7 +36,6 @@ CoreWindow::CoreWindow(QWidget *parent) :
 
 CoreWindow::~CoreWindow()
 {
-    projectFile.close();
     delete ui;
 }
 
@@ -49,34 +48,24 @@ void CoreWindow::ShowError(QString title, QString description)
 
 void CoreWindow::startNewProject(QString name, QString path)
 {
-    projectName = name;
-    projectPath = path;
-    QString fileName(name.toLower().replace(' ', '_') + ".pro");
+    OTUI::Project m_Project(name, path);
 
-    projectFile.setFileName(path + "/" + fileName);
-    if(!projectFile.open(QIODevice::ReadWrite))
+    if(!m_Project.loaded())
         return;
 
-    QDataStream data(&projectFile);
-    data << projectName;
-    projectFile.flush();
-
-    setWindowTitle(projectName + " - OTUI Editor");
+    setWindowTitle(name + " - OTUI Editor");
 }
 
 void CoreWindow::loadProjectData(QDataStream& data, QString path)
 {
-    data >> projectName;
-    projectPath = path;
+    OTUI::Project m_Project(data, path);
 
-    QString fileName(projectName.toLower().replace(' ', '_') + ".pro");
-    projectFile.setFileName(path + "/" + fileName);
-    if(!projectFile.open(QIODevice::ReadWrite))
+    if(!m_Project.loaded())
         return;
 
     // TODO: Initialize widgets
 
-    setWindowTitle(projectName + " - OTUI Editor");
+    setWindowTitle(m_Project.getProjectName() + " - OTUI Editor");
 }
 
 void CoreWindow::loadSettings()
@@ -323,9 +312,9 @@ void CoreWindow::on_actionNewProject_triggered()
 {
     // TODO: ask to save current project
 
-    if(projectFile.isOpen())
+    if(m_Project.getProjectFile()->isOpen())
     {
-        projectFile.close();
+        m_Project.getProjectFile()->close();
     }
 
     // Clear tree
@@ -348,7 +337,7 @@ void CoreWindow::on_actionSaveProject_triggered()
 
 void CoreWindow::on_actionCloseProject_triggered()
 {
-    if(projectChanged)
+    if(m_Project.isChanged())
     {
         QMessageBox box;
         QMessageBox::StandardButton response = box.question(this, "Save Changes",
@@ -364,7 +353,7 @@ void CoreWindow::on_actionCloseProject_triggered()
             return;
     }
 
-    projectFile.close();
+    m_Project.getProjectFile()->close();
     StartupWindow* w = new StartupWindow();
     w->show();
     hide();

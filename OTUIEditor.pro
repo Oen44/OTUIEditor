@@ -32,6 +32,7 @@ SOURCES += \
         otui/button.cpp \
         otui/label.cpp \
         otui/mainwindow.cpp \
+        otui/project.cpp \
         otui/widget.cpp \
         recentproject.cpp \
         startupwindow.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
         otui/label.h \
         otui/mainwindow.h \
         otui/otui.h \
+        otui/project.h \
         otui/widget.h \
         qpropertyeditorwidget.h \
         recentproject.h \
