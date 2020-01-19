@@ -74,16 +74,11 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES += \
-    lib/libQPropertyEditord.a \
     stylesheet.css
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/ -lQPropertyEditor -lOpengl32
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/ -lQPropertyEditord -lOpengl32
+else:unix: LIBS += -L$$PWD/lib/ -lQPropertyEditor -lOpengl32
 
-CONFIG(debug, debug|release) {
-        LIBS += -lQPropertyEditord
-}
-
-CONFIG(release, debug|release) {
-        LIBS += -lQPropertyEditor
-}
-
-unix:!macx: LIBS += -lQt5OpenGL
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.
