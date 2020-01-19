@@ -6,6 +6,7 @@ OTUI::Project::Project(QString name, QString path)
 {
     m_Name = name;
     m_Path = path;
+    m_File = new QFile();
     QString fileName(name.toLower().replace(' ', '_') + ".pro");
 
     m_File->setFileName(path + "/" + fileName);
@@ -24,6 +25,7 @@ OTUI::Project::Project(QDataStream& data, QString path)
 {
     data >> m_Name;
     m_Path = path;
+    m_File = new QFile();
 
     QString fileName(m_Name.toLower().replace(' ', '_') + ".pro");
     m_File->setFileName(path + "/" + fileName);
