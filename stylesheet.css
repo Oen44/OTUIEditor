@@ -16,6 +16,34 @@ QPushButton[flat="true"]:hover {
     background-color: #222;
 }
 
+QSlider::groove:horizontal {
+    border: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 12px;
+}
+
+QSlider::handle:horizontal {
+    background: #3F3F3F;
+    width: 12px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: #525252;
+}
+
+QSlider::add-page:horizontal {
+    background: rgb(180, 180, 180);
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
+QSlider::sub-page:horizontal {
+    background: rgb(100, 100, 100);
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
 RecentProject {
     padding: 10px;
 }

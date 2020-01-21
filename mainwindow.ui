@@ -58,17 +58,72 @@
        </widget>
       </item>
       <item>
-       <widget class="OpenGLWidget" name="openGLWidget">
-        <property name="mouseTracking">
-         <bool>true</bool>
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
+        <property name="spacing">
+         <number>0</number>
         </property>
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
-        </property>
-        <property name="contextMenuPolicy">
-         <enum>Qt::NoContextMenu</enum>
-        </property>
-       </widget>
+        <item>
+         <widget class="OpenGLWidget" name="openGLWidget">
+          <property name="mouseTracking">
+           <bool>true</bool>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::ClickFocus</enum>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::NoContextMenu</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <item alignment="Qt::AlignVCenter">
+           <widget class="QLabel" name="label">
+            <property name="minimumSize">
+             <size>
+              <width>10</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #cfd0d7;</string>
+            </property>
+            <property name="text">
+             <string>100%</string>
+            </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignLeft|Qt::AlignVCenter">
+           <widget class="QSlider" name="horizontalSlider">
+            <property name="minimumSize">
+             <size>
+              <width>120</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QPropertyEditorWidget" name="propertyEditor"/>
@@ -83,7 +138,7 @@
      <x>0</x>
      <y>0</y>
      <width>1240</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
