@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>stylesheet.css</file>
+        <file>images/button_rounded.png</file>
+        <file>images/main_window.png</file>
+    </qresource>
+</RCC>

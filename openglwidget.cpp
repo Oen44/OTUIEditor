@@ -10,6 +10,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     m_brushNormal = QBrush(QColor(0, 255, 0));
     m_brushHover = QBrush(QColor(255, 0, 0));
     m_brushSelected = QBrush(QColor(0, 0, 255));
+    scale = 1.0;
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -125,7 +126,7 @@ void OpenGLWidget::paintGL()
 
 void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
 {
-    m_mousePos = QPoint(event->x(), event->y());
+    m_mousePos = QPoint(event->x() / scale, event->y() / scale);
     if(m_selected != nullptr)
     {
         OTUI::Widget* parent = m_selected->getParent();
@@ -247,7 +248,7 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        m_mousePressedPos = QPoint(event->x(), event->y());
+        m_mousePressedPos = QPoint(event->x() / scale, event->y() / scale);
         m_mousePressed = true;
         bool selected = false;
         m_selected = nullptr;
@@ -256,8 +257,10 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
             OTUI::Widget* parent = widget->getParent();
             if(parent)
             {
-                QRect widgetRect(widget->x() + parent->x() - PIVOT_WIDTH / 2, widget->y() + parent->y() - PIVOT_HEIGHT / 2,
-                                 widget->width() + PIVOT_WIDTH, widget->height() + PIVOT_HEIGHT);
+                QRect widgetRect(widget->x() + parent->x() - PIVOT_WIDTH / 2,
+                                 widget->y() + parent->y() - PIVOT_HEIGHT / 2,
+                                 widget->width() + PIVOT_WIDTH,
+                                 widget->height() + PIVOT_HEIGHT);
                 if(widgetRect.contains(m_mousePressedPos))
                 {
                     m_selected = widget.get();
@@ -267,8 +270,10 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
             }
             else
             {
-                QRect widgetRect(widget->getRect()->x() - PIVOT_WIDTH / 2, widget->getRect()->y() - PIVOT_HEIGHT / 2,
-                                 widget->getRect()->width() + PIVOT_WIDTH, widget->getRect()->height() + PIVOT_HEIGHT);
+                QRect widgetRect(widget->getRect()->x() - PIVOT_WIDTH / 2,
+                                 widget->getRect()->y() - PIVOT_HEIGHT / 2,
+                                 widget->getRect()->width() + PIVOT_WIDTH,
+                                 widget->getRect()->height() + PIVOT_HEIGHT);
                 if(widgetRect.contains(m_mousePressedPos))
                 {
                     m_selected = widget.get();
@@ -280,7 +285,7 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
 
         if(selected)
         {
-            offset = m_mousePressedPos - m_selected->getRect()->topLeft();
+            offset = m_mousePressedPos - (m_selected->getRect()->topLeft());
         }
     }
 }
@@ -354,8 +359,9 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
 void OpenGLWidget::draw()
 {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0);
-    QPainter painter(this);
 
+    QPainter painter(this);
+    painter.scale(scale, scale);
     for(auto const& widget : m_otuiWidgets)
     {
         OTUI::Widget* parent = widget->getParent();

@@ -87,7 +87,7 @@
            <number>10</number>
           </property>
           <item alignment="Qt::AlignVCenter">
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="zoomLabel">
             <property name="minimumSize">
              <size>
               <width>10</width>
@@ -115,6 +115,18 @@
               <width>120</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="minimum">
+             <number>100</number>
+            </property>
+            <property name="maximum">
+             <number>200</number>
+            </property>
+            <property name="singleStep">
+             <number>25</number>
+            </property>
+            <property name="pageStep">
+             <number>10</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>

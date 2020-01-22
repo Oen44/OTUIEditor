@@ -42,6 +42,8 @@ private slots:
 
     void on_actionCloseProject_triggered();
 
+    void on_horizontalSlider_valueChanged(int value);
+
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     void keyReleaseEvent(QKeyEvent* event);

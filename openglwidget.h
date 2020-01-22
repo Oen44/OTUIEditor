@@ -42,6 +42,8 @@ public:
 
     OTUI::Widget* m_selected = nullptr;
 
+    double scale;
+
 private:
     std::unique_ptr<OTUI::Widget> initializeWidget(OTUI::WidgetType type, QString widgetId, QString imagePath6);
 

@@ -359,3 +359,9 @@ void CoreWindow::on_actionCloseProject_triggered()
     hide();
 
 }
+
+void CoreWindow::on_horizontalSlider_valueChanged(int value)
+{
+    ui->openGLWidget->scale = value / 100.0;
+    ui->zoomLabel->setText(QString::number(value) + "%");
+}
