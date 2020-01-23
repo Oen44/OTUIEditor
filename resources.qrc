@@ -3,5 +3,7 @@
         <file>stylesheet.css</file>
         <file>images/button_rounded.png</file>
         <file>images/main_window.png</file>
+        <file>images/branch_closed.png</file>
+        <file>images/branch_open.png</file>
     </qresource>
 </RCC>
