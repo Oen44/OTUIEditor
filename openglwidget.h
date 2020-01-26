@@ -52,7 +52,6 @@ private:
     const uint8_t PIVOT_WIDTH = 8;
     const uint8_t PIVOT_HEIGHT = 8;
 
-    void draw();
     void drawBorderImage(QPainter *painter, OTUI::Widget const& widget);
     void drawBorderImage(QPainter *painter, OTUI::Widget const& widget, int x, int y);
     void drawOutlines(QPainter* painter, int left, int top, int width, int height);

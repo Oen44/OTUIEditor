@@ -11,6 +11,10 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     m_brushHover = QBrush(QColor(255, 0, 0));
     m_brushSelected = QBrush(QColor(0, 0, 255));
     scale = 1.0;
+
+    QTimer *pTimer = new QTimer(this);
+    connect(pTimer, SIGNAL(timeout()), this, SLOT(update()));
+    pTimer->start(1000 / 60.0);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -121,7 +125,50 @@ std::unique_ptr<OTUI::Widget> OpenGLWidget::initializeWidget(OTUI::WidgetType ty
 void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    draw();
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0);
+
+    QPainter painter(this);
+    painter.scale(scale, scale);
+    for(auto const& widget : m_otuiWidgets)
+    {
+        OTUI::Widget* parent = widget->getParent();
+        if(!widget->image().isNull())
+        {
+            if(widget->getImageBorder().isNull())
+            {
+                if(parent != nullptr)
+                    painter.drawImage(widget->getPos() + parent->getPos(), widget->image(), widget->getImageCrop());
+                else
+                    painter.drawImage(*widget->getRect(), widget->image(), widget->getImageCrop());
+            }
+            else
+            {
+                if(parent != nullptr)
+                    drawBorderImage(&painter, *widget, widget->x() + parent->x(), widget->y() + parent->y());
+                else
+                    drawBorderImage(&painter, *widget);
+            }
+        }
+
+        widget->draw(&painter);
+
+        if(m_selected == nullptr) continue;
+
+        if(widget->getId() == m_selected->getId())
+        {
+            if(parent != nullptr)
+            {
+                drawOutlines(&painter, (widget->x() - LINE_WIDTH / 2)  + parent->x(), (widget->y() - LINE_WIDTH / 2) + parent->y(), widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
+                drawPivots(&painter, widget->x() + parent->x(), widget->y() + parent->y(), widget->width(), widget->height());
+            }
+            else
+            {
+                drawOutlines(&painter, widget->x() - LINE_WIDTH / 2, widget->y() - LINE_WIDTH / 2, widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
+                drawPivots(&painter, widget->x(), widget->y(), widget->width(), widget->height());
+            }
+
+        }
+    }
 }
 
 void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
@@ -354,55 +401,6 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
     {
         m_selected->setPos(newPos);
     }
-}
-
-void OpenGLWidget::draw()
-{
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0);
-
-    QPainter painter(this);
-    painter.scale(scale, scale);
-    for(auto const& widget : m_otuiWidgets)
-    {
-        OTUI::Widget* parent = widget->getParent();
-        if(!widget->image().isNull())
-        {
-            if(widget->getImageBorder().isNull())
-            {
-                if(parent != nullptr)
-                    painter.drawImage(widget->getPos() + parent->getPos(), widget->image(), widget->getImageCrop());
-                else
-                    painter.drawImage(*widget->getRect(), widget->image(), widget->getImageCrop());
-            }
-            else
-            {
-                if(parent != nullptr)
-                    drawBorderImage(&painter, *widget, widget->x() + parent->x(), widget->y() + parent->y());
-                else
-                    drawBorderImage(&painter, *widget);
-            }
-        }
-
-        widget->draw(&painter);
-
-        if(m_selected == nullptr) continue;
-
-        if(widget->getId() == m_selected->getId())
-        {
-            if(parent != nullptr)
-            {
-                drawOutlines(&painter, (widget->x() - LINE_WIDTH / 2)  + parent->x(), (widget->y() - LINE_WIDTH / 2) + parent->y(), widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
-                drawPivots(&painter, widget->x() + parent->x(), widget->y() + parent->y(), widget->width(), widget->height());
-            }
-            else
-            {
-                drawOutlines(&painter, widget->x() - LINE_WIDTH / 2, widget->y() - LINE_WIDTH / 2, widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
-                drawPivots(&painter, widget->x(), widget->y(), widget->width(), widget->height());
-            }
-
-        }
-    }
-    update();
 }
 
 void OpenGLWidget::drawBorderImage(QPainter *painter, OTUI::Widget const& widget)
