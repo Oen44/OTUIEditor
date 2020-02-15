@@ -80,63 +80,6 @@ void CoreWindow::saveSettings()
     settings.setValue("text", "");
 }
 
-void CoreWindow::on_newMainWindow_triggered()
-{
-    QModelIndex index = ui->treeView->currentIndex();
-    QString widgetId("mainWindow");
-    if(index.isValid())
-    {
-        addChildToTree(widgetId);
-    }
-    else
-    {
-        QStandardItem* root = model->invisibleRootItem();
-        QStandardItem* item = new QStandardItem(widgetId);
-        item->setEditable(false);
-        root->appendRow(item);
-        model->setHeaderData(0, Qt::Horizontal, "Widgets List");
-        ui->treeView->selectionModel()->select(item->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-        ui->treeView->selectionModel()->setCurrentIndex(item->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-        selectWidgetById(item->text());
-    }
-
-    m_selected = ui->openGLWidget->addWidget(OTUI::MainWindowType, widgetId, ":/images/main_window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
-    if(m_selected != nullptr)
-    {
-        ui->propertyEditor->addObject(m_selected);
-    }
-}
-
-void CoreWindow::on_newButton_triggered()
-{
-    QModelIndex index = ui->treeView->currentIndex();
-    if(index.isValid())
-    {
-        QString widgetId("button");
-        m_selected = ui->openGLWidget->addWidgetChild(OTUI::ButtonType, "mainWindow", widgetId, ":/images/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
-        if(m_selected != nullptr)
-        {
-            ui->propertyEditor->setObject(m_selected);
-        }
-        addChildToTree(m_selected->getId());
-    }
-}
-
-void CoreWindow::on_newLabel_triggered()
-{
-    QModelIndex index = ui->treeView->currentIndex();
-    if(index.isValid())
-    {
-        QString widgetId("label");
-        m_selected = ui->openGLWidget->addWidgetChild(OTUI::LabelType, "mainWindow", widgetId, nullptr, QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
-        if(m_selected != nullptr)
-        {
-            ui->propertyEditor->setObject(m_selected);
-        }
-        addChildToTree(m_selected->getId());
-    }
-}
-
 void CoreWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
 {
     QMenu menu(this);
@@ -151,6 +94,8 @@ void CoreWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
     newMenu->addAction(ui->newMainWindow);
     newMenu->addAction(ui->newButton);
     newMenu->addAction(ui->newLabel);
+    newMenu->addAction(ui->newUIItem);
+    newMenu->addAction(ui->newUICreature);
     newMenu->addSeparator();
 
     QMenu* customMenu = newMenu->addMenu("Custom");
@@ -364,4 +309,91 @@ void CoreWindow::on_horizontalSlider_valueChanged(int value)
 {
     ui->openGLWidget->scale = value / 100.0;
     ui->zoomLabel->setText(QString::number(value) + "%");
+}
+
+void CoreWindow::on_newMainWindow_triggered()
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    QString widgetId("mainWindow");
+    if(index.isValid())
+    {
+        addChildToTree(widgetId);
+    }
+    else
+    {
+        QStandardItem* root = model->invisibleRootItem();
+        QStandardItem* item = new QStandardItem(widgetId);
+        item->setEditable(false);
+        root->appendRow(item);
+        model->setHeaderData(0, Qt::Horizontal, "Widgets List");
+        ui->treeView->selectionModel()->select(item->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+        ui->treeView->selectionModel()->setCurrentIndex(item->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+        selectWidgetById(item->text());
+    }
+
+    m_selected = ui->openGLWidget->addWidget(OTUI::MainWindowType, widgetId, ":/images/main_window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
+    if(m_selected != nullptr)
+    {
+        ui->propertyEditor->addObject(m_selected);
+    }
+}
+
+void CoreWindow::on_newButton_triggered()
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    if(index.isValid())
+    {
+        QString widgetId("button");
+        m_selected = ui->openGLWidget->addWidgetChild(OTUI::ButtonType, "mainWindow", widgetId, ":/images/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
+        if(m_selected != nullptr)
+        {
+            ui->propertyEditor->setObject(m_selected);
+        }
+        addChildToTree(m_selected->getId());
+    }
+}
+
+void CoreWindow::on_newLabel_triggered()
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    if(index.isValid())
+    {
+        QString widgetId("label");
+        m_selected = ui->openGLWidget->addWidgetChild(OTUI::LabelType, "mainWindow", widgetId, nullptr, QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        if(m_selected != nullptr)
+        {
+            ui->propertyEditor->setObject(m_selected);
+        }
+        addChildToTree(m_selected->getId());
+    }
+}
+
+void CoreWindow::on_newUIItem_triggered()
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    if(index.isValid())
+    {
+        QString widgetId("item");
+        m_selected = ui->openGLWidget->addWidgetChild(OTUI::ItemType, "mainWindow", widgetId, nullptr, QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        if(m_selected != nullptr)
+        {
+            ui->propertyEditor->setObject(m_selected);
+        }
+        addChildToTree(m_selected->getId());
+    }
+}
+
+void CoreWindow::on_newUICreature_triggered()
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    if(index.isValid())
+    {
+        QString widgetId("creature");
+        m_selected = ui->openGLWidget->addWidgetChild(OTUI::CreatureType, "mainWindow", widgetId, nullptr, QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        if(m_selected != nullptr)
+        {
+            ui->propertyEditor->setObject(m_selected);
+        }
+        addChildToTree(m_selected->getId());
+    }
 }

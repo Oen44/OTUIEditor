@@ -102,6 +102,16 @@ std::unique_ptr<OTUI::Widget> OpenGLWidget::initializeWidget(OTUI::WidgetType ty
         widget = std::make_unique<OTUI::Label>(widgetId, imagePath);
         break;
     }
+    case OTUI::ItemType:
+    {
+        widget = std::make_unique<OTUI::Item>(widgetId);
+        break;
+    }
+    case OTUI::CreatureType:
+    {
+        widget = std::make_unique<OTUI::Creature>(widgetId);
+        break;
+    }
     }
 
     uint8_t found = 0;

@@ -323,6 +323,22 @@
     <string>Exit</string>
    </property>
   </action>
+  <action name="newUIItem">
+   <property name="text">
+    <string>Item</string>
+   </property>
+   <property name="toolTip">
+    <string>Item</string>
+   </property>
+  </action>
+  <action name="newUICreature">
+   <property name="text">
+    <string>Creature</string>
+   </property>
+   <property name="toolTip">
+    <string>Creature</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

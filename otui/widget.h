@@ -13,7 +13,7 @@
 namespace OTUI {
     template<typename T = int>
     struct EdgeGroup {
-        EdgeGroup() { top = right = bottom = left = T(0); }
+        EdgeGroup() { top = right = bottom = left = T(); }
         void set(T value) { top = right = bottom = left = value; }
         T top;
         T right;

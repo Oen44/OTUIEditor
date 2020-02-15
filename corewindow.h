@@ -44,6 +44,10 @@ private slots:
 
     void on_horizontalSlider_valueChanged(int value);
 
+    void on_newUIItem_triggered();
+
+    void on_newUICreature_triggered();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     void keyReleaseEvent(QKeyEvent* event);

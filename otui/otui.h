@@ -6,6 +6,8 @@
 #include "mainwindow.h"
 #include "button.h"
 #include "label.h"
+#include "item.h"
+#include "creature.h"
 
 namespace OTUI {
     class Project;
@@ -16,7 +18,9 @@ namespace OTUI {
     enum WidgetType {
         MainWindowType,
         ButtonType,
-        LabelType
+        LabelType,
+        ItemType,
+        CreatureType
     };
 }
 
