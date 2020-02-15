@@ -8,8 +8,18 @@
 #include <QCoreApplication>
 #include "events/setidevent.h"
 #include "types/CustomTypes.h"
+#include "const.h"
 
 namespace OTUI {
+    template<typename T = int>
+    struct EdgeGroup {
+        EdgeGroup() { top = right = bottom = left = T(0); }
+        void set(T value) { top = right = bottom = left = value; }
+        T top;
+        T right;
+        T bottom;
+        T left;
+    };
     class Widget : public QObject
     {
         Q_OBJECT
@@ -25,6 +35,21 @@ namespace OTUI {
 
     public:
         virtual void draw(QPainter*) {}
+
+    protected:
+        QString m_id;
+        QRect m_rect;
+        QPoint m_virtualOffset;
+        bool m_enabled;
+        bool m_visible = true;
+        bool m_focusable = true;
+        bool m_fixedSize = false;
+        bool m_phantom = false;
+        bool m_draggable = false;
+        bool m_destroyed = false;
+        bool m_clipping = false;
+
+        OTUI::Widget* m_parent;
 
     public:
         bool operator == (const Widget &Ref) const
@@ -89,15 +114,26 @@ namespace OTUI {
         }
 
     protected:
-        QString m_id = nullptr;
-        QRect m_rect;
 
         QImage m_image;
         QPoint m_imageSize;
         QRect m_imageCrop;
         QRect m_imageBorder;
 
-        OTUI::Widget* m_parent = nullptr;
+        QColor m_color;
+        QColor m_backgroundColor;
+
+        QImage m_icon;
+        QColor m_iconColor;
+        QRect m_iconRect;
+        QRect m_iconClipRect;
+        OTUI::AlignmentFlag m_iconAlign;
+        EdgeGroup<QColor> m_borderColor;
+        EdgeGroup<int> m_borderWidth;
+        EdgeGroup<int> m_margin;
+        EdgeGroup<int> m_padding;
+        float m_opacity;
+        float m_rotation;
     };
 }
 
