@@ -10,8 +10,10 @@ RecentProject::RecentProject(QString name, QString path, QString date)
     this->path = path;
     this->date = date;
 
+    QFont font("Roboto", 9);
+
     QLabel* projectName = new QLabel(this);
-    projectName->setFont(QFont("Roboto", 9));
+    projectName->setFont(font);
     projectName->setText(name);
     projectName->setStyleSheet("color: #fff;font-weight: bold;");
 
@@ -20,7 +22,7 @@ RecentProject::RecentProject(QString name, QString path, QString date)
     lay->setSpacing(0);
 
     QLabel* projectDate = new QLabel(this);
-    projectDate->setFont(QFont("Roboto", 9));
+    projectDate->setFont(font);
     projectDate->setText(date);
     projectDate->setStyleSheet("color: #aaa;font-weight: normal;");
     lay->addWidget(projectDate, 0, Qt::AlignRight);
@@ -29,7 +31,7 @@ RecentProject::RecentProject(QString name, QString path, QString date)
     layout->addWidget(projectName, 0, Qt::AlignTop);
 
     QLabel* projectPath = new QLabel(this);
-    projectPath->setFont(QFont("Roboto", 9));
+    projectPath->setFont(font);
     QFontMetrics metrics(projectPath->font());
     QString elidedText = metrics.elidedText(path, Qt::ElideRight, 360);
     projectPath->setText(elidedText);
