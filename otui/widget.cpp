@@ -6,6 +6,15 @@ OTUI::Widget::Widget() : m_id("widgetid")
     m_parent = nullptr;
 }
 
+OTUI::Widget::Widget(QString widgetId)
+{
+    m_parent = nullptr;
+    m_id.clear();
+    m_id.append(widgetId);
+    m_rect = QRect(0, 0, 32, 32);
+    m_imageCrop.setRect(0, 0, -1, -1);
+}
+
 OTUI::Widget::Widget(QString widgetId, QString imagePath)
 {
     m_parent = nullptr;

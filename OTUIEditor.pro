@@ -30,6 +30,7 @@ SOURCES += \
         main.cpp \
         openglwidget.cpp \
         otui/button.cpp \
+        otui/item.cpp \
         otui/label.cpp \
         otui/mainwindow.cpp \
         otui/project.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
         events/setidevent.h \
         openglwidget.h \
         otui/button.h \
+        otui/item.h \
         otui/label.h \
         otui/mainwindow.h \
         otui/otui.h \

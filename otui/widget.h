@@ -30,6 +30,7 @@ namespace OTUI {
 
     public:
         Widget();
+        Widget(QString widgetId);
         Widget(QString widgetId, QString imagePath);
         virtual ~Widget() = default;
 
