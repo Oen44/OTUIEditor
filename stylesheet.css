@@ -59,6 +59,72 @@ QSlider::sub-page:horizontal {
     margin-bottom: 14px;
 }
 
+/* ScrollBar Start */
+QScrollBar:vertical {
+   border: none;
+   width: 10px;
+   margin: 0px 0px 0px 0px;
+}
+
+QScrollBar:vertical, QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+   background: #202020;
+   border-radius: 5px;
+   min-height: 0px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #2B2B2B;
+}
+
+QScrollBar::add-line:vertical {
+   height: 0px;
+   subcontrol-position: bottom;
+   subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical {
+   height: 0px;
+   subcontrol-position: top;
+   subcontrol-origin: margin;
+}
+/* Horizontal */
+QScrollBar:horizontal {
+   border: none;
+   height: 10px;
+   margin: 0px 0px 0px 0px;
+}
+
+QScrollBar:horizontal, QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: transparent;
+}
+
+QScrollBar::handle:horizontal {
+   background: #202020;
+   border-radius: 5px;
+   min-width: 0px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #2B2B2B;
+}
+
+QScrollBar::add-line:horizontal {
+   width: 0px;
+   subcontrol-position: right;
+   subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal {
+   width: 0px;
+   subcontrol-position: left;
+   subcontrol-origin: margin;
+}
+/* ScrollBar End */
+
 RecentProject {
     padding: 10px;
 }
@@ -112,7 +178,7 @@ QTreeView::item:selected {
     color: #fff;
 }
 
-QScrollArea, #propertiesContents {
+QScrollArea, #propertiesContents, #recentListContent {
     border: none;
     background-color: #121212;
 }

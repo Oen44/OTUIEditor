@@ -13,9 +13,7 @@ StartupWindow::StartupWindow(QWidget *parent) :
 
     w = new CoreWindow();
 
-    QVBoxLayout* layout = reinterpret_cast<QVBoxLayout*>(ui->recentList->layout());
-    ui->recentList->layout()->setSpacing(0);
-    ui->recentList->layout()->setMargin(0);
+    QWidget* recentList = reinterpret_cast<QWidget*>(ui->recentListContent);
 
     QFile recentFile("recent.pro");
 
@@ -36,10 +34,13 @@ StartupWindow::StartupWindow(QWidget *parent) :
             recentData >> path;
             recentData >> date;
 
-            std::unique_ptr<RecentProject> rp = std::make_unique<RecentProject>(name, path, date);
-            layout->addWidget(rp.get(), 0, Qt::AlignTop);
-            connect(rp.get(), &RecentProject::clicked, this, &StartupWindow::recentProjectClicked);
-            m_recentProjects.push_back(std::move(rp));
+            if(QFile::exists(path + "/" + name.toLower().replace(' ', '_') + ".pro")) {
+                std::unique_ptr<RecentProject> rp = std::make_unique<RecentProject>(name, path, date);
+                rp->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+                recentList->layout()->addWidget(rp.get());
+                connect(rp.get(), &RecentProject::clicked, this, &StartupWindow::recentProjectClicked);
+                m_recentProjects.push_back(std::move(rp));
+            }
         }
     }
     recentFile.close();
@@ -125,11 +126,6 @@ void StartupWindow::on_createProject_clicked()
     recentFile.resize(0);
 
     QDataStream data(&recentFile);
-
-    if(m_recentProjects.size() == 5)
-    {
-        m_recentProjects.pop_back();
-    }
 
     std::unique_ptr<RecentProject> newProject = std::make_unique<RecentProject>(name, path, date);
 
