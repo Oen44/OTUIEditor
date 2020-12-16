@@ -10,6 +10,11 @@ OTUI::Item::Item(QString widgetId) : Widget(widgetId)
     m_parent = nullptr;
 }
 
+OTUI::Item::Item(QString widgetId, QString imagePath) : Widget(widgetId, imagePath)
+{
+    m_parent = nullptr;
+}
+
 OTUI::Item::~Item()
 {
 

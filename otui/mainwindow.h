@@ -6,10 +6,6 @@
 namespace OTUI {
     class MainWindow : public Widget
     {
-        Q_OBJECT
-
-        Q_PROPERTY(QString Text READ getText WRITE setText DESIGNABLE true USER true)
-
     public:
         MainWindow();
         MainWindow(QString widgetId, QString imagePath);
@@ -22,7 +18,7 @@ namespace OTUI {
         }
 
     public:
-        void draw(QPainter* painter);
+        void draw(QPainter& painter);
 
     private:
         QString m_text = "Window Title";

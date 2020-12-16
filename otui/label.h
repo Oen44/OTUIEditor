@@ -8,11 +8,6 @@
 namespace OTUI {
     class Label : public Widget
     {
-        Q_OBJECT
-
-        Q_PROPERTY(QString Text READ getText WRITE setText DESIGNABLE true USER true)
-        Q_PROPERTY(QColor Color READ getColor WRITE setColor DESIGNABLE true USER true)
-
     public:
         Label();
         Label(QString widgetId, QString imagePath);
@@ -30,7 +25,7 @@ namespace OTUI {
         }
 
     public:
-        void draw(QPainter* painter);
+        void draw(QPainter& painter);
 
     private:
         QString m_text = "Label";

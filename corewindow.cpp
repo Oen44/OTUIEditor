@@ -310,7 +310,7 @@ void CoreWindow::on_newMainWindow_triggered()
         selectWidgetById(item->text());
     }
 
-    m_selected = ui->openGLWidget->addWidget(OTUI::MainWindowType, widgetId, ":/images/main_window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
+    m_selected = ui->openGLWidget->addWidget<OTUI::MainWindow>(widgetId, ":/images/main_window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
 }
 
 void CoreWindow::on_newButton_triggered()
@@ -319,7 +319,7 @@ void CoreWindow::on_newButton_triggered()
     if(index.isValid())
     {
         QString widgetId("button");
-        m_selected = ui->openGLWidget->addWidgetChild(OTUI::ButtonType, "mainWindow", widgetId, ":/images/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Button>("mainWindow", widgetId, ":/images/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
         addChildToTree(m_selected->getId());
     }
 }
@@ -330,7 +330,7 @@ void CoreWindow::on_newLabel_triggered()
     if(index.isValid())
     {
         QString widgetId("label");
-        m_selected = ui->openGLWidget->addWidgetChild(OTUI::LabelType, "mainWindow", widgetId, nullptr, QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Label>("mainWindow", widgetId, nullptr, QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
     }
 }
@@ -341,7 +341,7 @@ void CoreWindow::on_newUIItem_triggered()
     if(index.isValid())
     {
         QString widgetId("item");
-        m_selected = ui->openGLWidget->addWidgetChild(OTUI::ItemType, "mainWindow", widgetId, nullptr, QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Item>("mainWindow", widgetId, nullptr, QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
     }
 }
@@ -352,7 +352,7 @@ void CoreWindow::on_newUICreature_triggered()
     if(index.isValid())
     {
         QString widgetId("creature");
-        m_selected = ui->openGLWidget->addWidgetChild(OTUI::CreatureType, "mainWindow", widgetId, nullptr, QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Creature>("mainWindow", widgetId, nullptr, QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
     }
 }

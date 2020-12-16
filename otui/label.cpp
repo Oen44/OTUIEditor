@@ -16,11 +16,11 @@ OTUI::Label::~Label()
 
 }
 
-void OTUI::Label::draw(QPainter *painter)
+void OTUI::Label::draw(QPainter& painter)
 {
-    painter->save();
-    painter->setPen(getColor());
-    painter->setFont(QFont("Verdana", 11));
-    painter->drawText(x() + getParent()->x(), y() + getParent()->y(), width(), height(), Qt::AlignLeft | Qt::TextWrapAnywhere, getText());
-    painter->restore();
+    painter.save();
+    painter.setPen(getColor());
+    painter.setFont(getFont());
+    painter.drawText(x() + getParent()->x(), y() + getParent()->y(), width(), height(), Qt::AlignLeft | Qt::TextWrapAnywhere, getText());
+    painter.restore();
 }

@@ -4,6 +4,8 @@
 OTUI::Widget::Widget() : m_id("widgetid")
 {
     m_parent = nullptr;
+    m_font = QFont("Verdana", 11);
+    m_color = QColor("#dfdfdf");
 }
 
 OTUI::Widget::Widget(QString widgetId)
@@ -13,6 +15,8 @@ OTUI::Widget::Widget(QString widgetId)
     m_id.append(widgetId);
     m_rect = QRect(0, 0, 32, 32);
     m_imageCrop.setRect(0, 0, -1, -1);
+    m_font = QFont("Verdana", 11);
+    m_color = QColor("#dfdfdf");
 }
 
 OTUI::Widget::Widget(QString widgetId, QString imagePath)
@@ -25,6 +29,8 @@ OTUI::Widget::Widget(QString widgetId, QString imagePath)
     m_imageSize = QPoint(m_image.width(), m_image.height());
     m_rect = QRect(0, 0, m_image.width(), m_image.height());
     m_imageCrop.setRect(0, 0, -1, -1);
+    m_font = QFont("Verdana", 11);
+    m_color = QColor("#dfdfdf");
 }
 
 void OTUI::Widget::setId(const QString id) {

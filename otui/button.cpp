@@ -15,11 +15,11 @@ OTUI::Button::~Button()
 
 }
 
-void OTUI::Button::draw(QPainter *painter)
+void OTUI::Button::draw(QPainter& painter)
 {
-    painter->save();
-    painter->setPen(QColor("#dfdfdf"));
-    painter->setFont(QFont("Verdana", 11));
-    painter->drawText(x() + getParent()->x(), y() + getParent()->y(), width(), height(), Qt::AlignCenter, getText());
-    painter->restore();
+    painter.save();
+    painter.setPen(getColor());
+    painter.setFont(getFont());
+    painter.drawText(x() + getParent()->x(), y() + getParent()->y(), width(), height(), Qt::AlignCenter, getText());
+    painter.restore();
 }

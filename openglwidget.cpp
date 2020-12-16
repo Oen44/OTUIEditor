@@ -27,113 +27,6 @@ void OpenGLWidget::initializeGL()
 {
 }
 
-OTUI::Widget* OpenGLWidget::addWidget(OTUI::WidgetType type, QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
-{
-    std::unique_ptr<OTUI::Widget> widget = initializeWidget(type, widgetId, imagePath);
-
-    if(widget == nullptr)
-    {
-        CoreWindow::ShowError("Error", QString("Can't add %1 widget.\nWidget type is incorrect.").arg(widgetId));
-        return nullptr;
-    }
-
-    m_selected = widget.get();
-
-    widget->setRect(rect);
-    widget->setImageCrop(imageCrop);
-    widget->setImageBorder(imageBorder);
-    m_otuiWidgets.emplace_back(std::move(widget));
-
-    return m_selected;
-}
-
-OTUI::Widget* OpenGLWidget::addWidgetChild(OTUI::WidgetType type, QString parentId, QString& widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
-{
-    OTUI::Widget* parent = nullptr;
-    for(auto& w : m_otuiWidgets)
-    {
-        if(w->getId() == parentId)
-        {
-            parent = w.get();
-            break;
-        }
-    }
-
-    if(parent == nullptr)
-    {
-        CoreWindow::ShowError("Error", QString("Couldn't add %1 widget.\nParent with id %1 not found.").arg(widgetId).arg(parentId));
-        return nullptr;
-    }
-
-    std::unique_ptr<OTUI::Widget> widget = initializeWidget(type, widgetId, imagePath);
-
-    if(widget == nullptr)
-    {
-        CoreWindow::ShowError("Error", QString("Couldn't add %1 widget.\nWidget type is incorrect.").arg(widgetId));
-        return nullptr;
-    }
-
-    m_selected = widget.get();
-
-    widget->setRect(rect);
-    widget->setImageCrop(imageCrop);
-    widget->setImageBorder(imageBorder);
-    widget->setParent(parent);
-    m_otuiWidgets.emplace_back(std::move(widget));
-
-    return m_selected;
-}
-
-std::unique_ptr<OTUI::Widget> OpenGLWidget::initializeWidget(OTUI::WidgetType type, QString widgetId, QString imagePath)
-{
-    std::unique_ptr<OTUI::Widget> widget = nullptr;
-    switch(type)
-    {
-    case OTUI::MainWindowType:
-    {
-        widget = std::make_unique<OTUI::MainWindow>(widgetId, imagePath);
-        break;
-    }
-    case OTUI::ButtonType:
-    {
-        widget = std::make_unique<OTUI::Button>(widgetId, imagePath);
-        break;
-    }
-    case OTUI::LabelType:
-    {
-        widget = std::make_unique<OTUI::Label>(widgetId, imagePath);
-        break;
-    }
-    case OTUI::ItemType:
-    {
-        widget = std::make_unique<OTUI::Item>(widgetId);
-        break;
-    }
-    case OTUI::CreatureType:
-    {
-        widget = std::make_unique<OTUI::Creature>(widgetId);
-        break;
-    }
-    }
-
-    uint8_t found = 0;
-
-    for(auto const& w : m_otuiWidgets)
-    {
-        if(w->getId() == widgetId)
-            found++;
-        else if(w->getId() == QString("%1_%2").arg(widgetId).arg(found))
-            found++;
-    }
-
-    if(found > 0)
-    {
-        widget->setId(QString("%1_%2").arg(widgetId).arg(found));
-    }
-
-    return widget;
-}
-
 void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -149,35 +42,35 @@ void OpenGLWidget::paintGL()
         {
             if(widget->getImageBorder().isNull())
             {
-                if(parent != nullptr)
+                if(parent)
                     painter.drawImage(widget->getPos() + parent->getPos(), widget->image(), widget->getImageCrop());
                 else
                     painter.drawImage(*widget->getRect(), widget->image(), widget->getImageCrop());
             }
             else
             {
-                if(parent != nullptr)
-                    drawBorderImage(&painter, *widget, widget->x() + parent->x(), widget->y() + parent->y());
+                if(parent)
+                    drawBorderImage(painter, *widget, widget->x() + parent->x(), widget->y() + parent->y());
                 else
-                    drawBorderImage(&painter, *widget);
+                    drawBorderImage(painter, *widget);
             }
         }
 
-        widget->draw(&painter);
+        widget->draw(painter);
 
-        if(m_selected == nullptr) continue;
+        if(!m_selected) continue;
 
         if(widget->getId() == m_selected->getId())
         {
-            if(parent != nullptr)
+            if(parent)
             {
-                drawOutlines(&painter, (widget->x() - LINE_WIDTH / 2)  + parent->x(), (widget->y() - LINE_WIDTH / 2) + parent->y(), widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
-                drawPivots(&painter, widget->x() + parent->x(), widget->y() + parent->y(), widget->width(), widget->height());
+                drawOutlines(painter, (widget->x() - LINE_WIDTH / 2)  + parent->x(), (widget->y() - LINE_WIDTH / 2) + parent->y(), widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
+                drawPivots(painter, widget->x() + parent->x(), widget->y() + parent->y(), widget->width(), widget->height());
             }
             else
             {
-                drawOutlines(&painter, widget->x() - LINE_WIDTH / 2, widget->y() - LINE_WIDTH / 2, widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
-                drawPivots(&painter, widget->x(), widget->y(), widget->width(), widget->height());
+                drawOutlines(painter, widget->x() - LINE_WIDTH / 2, widget->y() - LINE_WIDTH / 2, widget->width() + LINE_WIDTH, widget->height() + LINE_WIDTH);
+                drawPivots(painter, widget->x(), widget->y(), widget->width(), widget->height());
             }
 
         }
@@ -187,11 +80,11 @@ void OpenGLWidget::paintGL()
 void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
 {
     m_mousePos = QPoint(event->x() / scale, event->y() / scale);
-    if(m_selected != nullptr)
+    if(m_selected)
     {
         OTUI::Widget* parent = m_selected->getParent();
         QRect parentBorder = QRect();
-        if(parent != nullptr)
+        if(parent)
         {
             parentBorder = parent->getImageBorder();
         }
@@ -201,7 +94,7 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
             {
                 QRect* rect = m_selected->getRect();
                 QPoint parentOffset(0, 0);
-                if(parent != nullptr)
+                if(parent)
                 {
                     parentOffset = QPoint(parent->x(), parent->y());
                 }
@@ -246,7 +139,7 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
                 int left = 1;
                 int top = 1;
 
-                if(parent != nullptr)
+                if(parent)
                 {
                     left = parentBorder.x();
                     top = parentBorder.y();
@@ -262,7 +155,7 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
                 if(rect->height() < 1)
                     rect->setHeight(1);
 
-                if(parent != nullptr)
+                if(parent)
                 {
                     if(rect->right() > parent->width() - parentBorder.width())
                         rect->setRight(parent->width() - parentBorder.width());
@@ -272,24 +165,11 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
             }
             else
             {
-                if(parent != nullptr)
+                if(parent)
                 {
                     if(m_selected->getParentRect().contains(m_mousePos))
                     {
-                        QPoint newPos(m_mousePos - offset);
-                        m_selected->setPos(newPos);
-
-                        if(m_selected->x() < parentBorder.x())
-                            newPos.setX(parentBorder.x());
-                        if(m_selected->y() < parentBorder.y())
-                            newPos.setY(parentBorder.y());
-
-                        if(m_selected->x() + m_selected->width() > parent->width() - parentBorder.width())
-                            newPos.setX(parent->width() - m_selected->width() - parentBorder.width());
-                        if(m_selected->y() + m_selected->height() > parent->height() - parentBorder.height())
-                            newPos.setY(parent->height() - m_selected->height() - parentBorder.height());
-
-                        m_selected->setPos(newPos);
+                        setInBounds(m_selected, QPoint(m_mousePos - offset));
                     }
                 }
                 else
@@ -361,7 +241,7 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
 {
-    if(m_selected == nullptr) return;
+    if(!m_selected) return;
 
     QRect* rect = m_selected->getRect();
     QPoint newPos(rect->topLeft());
@@ -392,7 +272,7 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
 
     OTUI::Widget* parent = m_selected->getParent();
 
-    if(parent != nullptr)
+    if(parent)
     {
         m_selected->setPos(newPos);
 
@@ -416,12 +296,12 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
     }
 }
 
-void OpenGLWidget::drawBorderImage(QPainter *painter, OTUI::Widget const& widget)
+void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const& widget)
 {
     drawBorderImage(painter, widget, widget.x(), widget.y());
 }
 
-void OpenGLWidget::drawBorderImage(QPainter *painter, OTUI::Widget const& widget, int x, int y)
+void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const& widget, int x, int y)
 {
     int top = widget.getImageBorder().y();
     int bottom = widget.getImageBorder().height();
@@ -450,44 +330,44 @@ void OpenGLWidget::drawBorderImage(QPainter *painter, OTUI::Widget const& widget
                            drawRect.top() + topBorder.height(),
                            centerSize.x(),
                            centerSize.y());
-        painter->drawImage(rectCoords, widget.image(), center);
+        painter.drawImage(rectCoords, widget.image(), center);
     }
     // top left corner
     rectCoords = QRect(drawRect.topLeft(), topLeftCorner.size());
-    painter->drawImage(rectCoords, widget.image(), topLeftCorner);
+    painter.drawImage(rectCoords, widget.image(), topLeftCorner);
     // top
     rectCoords = QRect(drawRect.left() + topLeftCorner.width(), drawRect.topLeft().y(), centerSize.x(), topBorder.height());
-    painter->drawImage(rectCoords, widget.image(), topBorder);
+    painter.drawImage(rectCoords, widget.image(), topBorder);
     // top right corner
     rectCoords = QRect(QPoint(drawRect.left() + topLeftCorner.width() + centerSize.x(), drawRect.top()), topRightCorner.size());
-    painter->drawImage(rectCoords, widget.image(), topRightCorner);
+    painter.drawImage(rectCoords, widget.image(), topRightCorner);
     // left
     rectCoords = QRect(drawRect.left(), drawRect.top() + topLeftCorner.height(), leftBorder.width(), centerSize.y());
-    painter->drawImage(rectCoords, widget.image(), leftBorder);
+    painter.drawImage(rectCoords, widget.image(), leftBorder);
     // right
     rectCoords = QRect(drawRect.left() + leftBorder.width() + centerSize.x(), drawRect.top() + topRightCorner.height(), rightBorder.width(), centerSize.y());
-    painter->drawImage(rectCoords, widget.image(), rightBorder);
+    painter.drawImage(rectCoords, widget.image(), rightBorder);
     // bottom left corner
     rectCoords = QRect(QPoint(drawRect.left(), drawRect.top() + topLeftCorner.height() + centerSize.y()), bottomLeftCorner.size());
-    painter->drawImage(rectCoords, widget.image(), bottomLeftCorner);
+    painter.drawImage(rectCoords, widget.image(), bottomLeftCorner);
     // bottom
     rectCoords = QRect(drawRect.left() + bottomLeftCorner.width(), drawRect.top() + topBorder.height() + centerSize.y(), centerSize.x(), bottomBorder.height());
-    painter->drawImage(rectCoords, widget.image(), bottomBorder);
+    painter.drawImage(rectCoords, widget.image(), bottomBorder);
     // bottom right corner
     rectCoords = QRect(QPoint(drawRect.left() + bottomLeftCorner.width() + centerSize.x(), drawRect.top() + topRightCorner.height() + centerSize.y()), bottomRightCorner.size());
-    painter->drawImage(rectCoords, widget.image(), bottomRightCorner);
+    painter.drawImage(rectCoords, widget.image(), bottomRightCorner);
 }
 
-void OpenGLWidget::drawOutlines(QPainter *painter, int left, int top, int width, int height)
+void OpenGLWidget::drawOutlines(QPainter &painter, int left, int top, int width, int height)
 {
-    painter->setPen(QPen(Qt::white, LINE_WIDTH, Qt::DashLine, Qt::SquareCap));
-    painter->drawLine(left, top, left + width, top);
-    painter->drawLine(left + width, top, left + width, top + height);
-    painter->drawLine(left + width, top + height, left, top + height);
-    painter->drawLine(left, top + height, left, top);
+    painter.setPen(QPen(Qt::white, LINE_WIDTH, Qt::DashLine, Qt::SquareCap));
+    painter.drawLine(left, top, left + width, top);
+    painter.drawLine(left + width, top, left + width, top + height);
+    painter.drawLine(left + width, top + height, left, top + height);
+    painter.drawLine(left, top + height, left, top);
 }
 
-void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, int height)
+void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, int height)
 {
     QRect rect(left - PIVOT_WIDTH / 2, top - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     QBrush brush = m_brushNormal;
@@ -502,7 +382,7 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
     brush = m_brushNormal;
     rect.setRect(left + width / 2 - PIVOT_WIDTH / 2, top - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
@@ -517,7 +397,7 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
     brush = m_brushNormal;
     rect.setRect(left + width - PIVOT_WIDTH / 2, top - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
@@ -532,7 +412,7 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
     brush = m_brushNormal;
     rect.setRect(left - PIVOT_WIDTH / 2, top + height / 2 - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
@@ -547,7 +427,7 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
     brush = m_brushNormal;
     rect.setRect(left + width - PIVOT_WIDTH / 2, top + height / 2 - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
@@ -562,7 +442,7 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
     brush = m_brushNormal;
     rect.setRect(left - PIVOT_WIDTH / 2, top + height - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
@@ -577,7 +457,7 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
     brush = m_brushNormal;
     rect.setRect(left + width / 2 - PIVOT_WIDTH / 2, top + height - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
@@ -592,7 +472,7 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
     brush = m_brushNormal;
     rect.setRect(left + width - PIVOT_WIDTH / 2, top + height - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
@@ -607,6 +487,6 @@ void OpenGLWidget::drawPivots(QPainter *painter, int left, int top, int width, i
             brush = m_brushHover;
     }
 
-    painter->fillRect(rect, brush);
+    painter.fillRect(rect, brush);
 
 }

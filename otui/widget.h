@@ -23,12 +23,6 @@ namespace OTUI {
     };
     class Widget : public QObject
     {
-        Q_OBJECT
-
-        Q_PROPERTY(QString Id READ getId WRITE setIdProperty DESIGNABLE true USER true)
-        Q_PROPERTY(QVector2D Position READ getPosition WRITE setPosition DESIGNABLE true USER true)
-        Q_PROPERTY(QPoint Size READ getSizeProperty WRITE setSizeProperty DESIGNABLE true USER true)
-
     public:
         Widget();
         Widget(QString widgetId);
@@ -36,7 +30,7 @@ namespace OTUI {
         virtual ~Widget() = default;
 
     public:
-        virtual void draw(QPainter*) {}
+        virtual void draw(QPainter&) {}
 
     protected:
         QString m_id;
@@ -115,6 +109,9 @@ namespace OTUI {
             m_parent = parent;
         }
 
+        const QFont& getFont() const { return m_font; }
+        QColor getColor() const { return m_color; }
+
     protected:
 
         QImage m_image;
@@ -122,6 +119,7 @@ namespace OTUI {
         QRect m_imageCrop;
         QRect m_imageBorder;
 
+        QFont m_font;
         QColor m_color;
         QColor m_backgroundColor;
 

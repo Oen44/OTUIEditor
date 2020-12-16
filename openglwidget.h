@@ -25,8 +25,66 @@ protected:
     void keyReleaseEvent(QKeyEvent* event);
 
 public:
-    OTUI::Widget* addWidget(OTUI::WidgetType type, QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
-    OTUI::Widget* addWidgetChild(OTUI::WidgetType type, QString parentId, QString& widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder);
+    template <class T>
+    OTUI::Widget* addWidget(QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
+    {
+        std::unique_ptr<OTUI::Widget> widget = initializeWidget<T>(widgetId, imagePath);
+
+        if(widget == nullptr)
+        {
+            CoreWindow::ShowError("Error", QString("Can't add %1 widget.\nWidget type is incorrect.").arg(widgetId));
+            return nullptr;
+        }
+
+        m_selected = widget.get();
+
+        widget->setRect(rect);
+        widget->setImageCrop(imageCrop);
+        widget->setImageBorder(imageBorder);
+        m_otuiWidgets.emplace_back(std::move(widget));
+
+        return m_selected;
+    }
+
+    template <class T>
+    OTUI::Widget* addWidgetChild(QString parentId, QString& widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
+    {
+        OTUI::Widget* parent = nullptr;
+        for(auto& w : m_otuiWidgets)
+        {
+            if(w->getId() == parentId)
+            {
+                parent = w.get();
+                break;
+            }
+        }
+
+        if(parent == nullptr)
+        {
+            CoreWindow::ShowError("Error", QString("Couldn't add %1 widget.\nParent with id %1 not found.").arg(widgetId).arg(parentId));
+            return nullptr;
+        }
+
+        std::unique_ptr<OTUI::Widget> widget = initializeWidget<T>(widgetId, imagePath);
+
+        if(widget == nullptr)
+        {
+            CoreWindow::ShowError("Error", QString("Couldn't add %1 widget.\nWidget type is incorrect.").arg(widgetId));
+            return nullptr;
+        }
+
+        m_selected = widget.get();
+
+        widget->setRect(rect);
+        widget->setImageCrop(imageCrop);
+        widget->setImageBorder(imageBorder);
+        widget->setParent(parent);
+        setInBounds(widget.get(), QPoint());
+        m_otuiWidgets.emplace_back(std::move(widget));
+
+        return m_selected;
+    }
+
     std::vector<std::unique_ptr<OTUI::Widget>> const& getOTUIWidgets() const { return m_otuiWidgets; }
     void deleteWidget(QString widgetId) {
         auto itr = std::find_if(std::begin(m_otuiWidgets),
@@ -45,17 +103,61 @@ public:
     double scale;
 
 private:
-    std::unique_ptr<OTUI::Widget> initializeWidget(OTUI::WidgetType type, QString widgetId, QString imagePath6);
+    template <class T>
+    std::unique_ptr<T> initializeWidget(QString widgetId, QString imagePath)
+    {
+        std::unique_ptr<T> widget = std::make_unique<T>(widgetId, imagePath);
+
+        uint8_t found = 0;
+
+        for(auto const& w : m_otuiWidgets)
+        {
+            if(w->getId() == widgetId)
+                found++;
+            else if(w->getId() == QString("%1_%2").arg(widgetId).arg(found))
+                found++;
+        }
+
+        if(found > 0)
+        {
+            widget->setId(QString("%1_%2").arg(widgetId).arg(found));
+        }
+
+        return widget;
+    }
+
+    void setInBounds(OTUI::Widget* widget, QPoint newPos)
+    {
+        OTUI::Widget* parent = widget->getParent();
+        QRect parentBorder = QRect();
+        if(parent != nullptr)
+        {
+            parentBorder = parent->getImageBorder();
+            widget->setPos(newPos);
+
+            if(widget->x() < parentBorder.x())
+                newPos.setX(parentBorder.x());
+            if(widget->y() < parentBorder.y())
+                newPos.setY(parentBorder.y());
+
+            if(widget->x() + widget->width() > parent->width() - parentBorder.width())
+                newPos.setX(parent->width() - widget->width() - parentBorder.width());
+            if(widget->y() + widget->height() > parent->height() - parentBorder.height())
+                newPos.setY(parent->height() - widget->height() - parentBorder.height());
+
+            widget->setPos(newPos);
+        }
+    }
 
 private:
     const uint8_t LINE_WIDTH = 2;
     const uint8_t PIVOT_WIDTH = 8;
     const uint8_t PIVOT_HEIGHT = 8;
 
-    void drawBorderImage(QPainter *painter, OTUI::Widget const& widget);
-    void drawBorderImage(QPainter *painter, OTUI::Widget const& widget, int x, int y);
-    void drawOutlines(QPainter* painter, int left, int top, int width, int height);
-    void drawPivots(QPainter* painter, int left, int top, int width, int height);
+    void drawBorderImage(QPainter &painter, OTUI::Widget const& widget);
+    void drawBorderImage(QPainter &painter, OTUI::Widget const& widget, int x, int y);
+    void drawOutlines(QPainter &painter, int left, int top, int width, int height);
+    void drawPivots(QPainter &painter, int left, int top, int width, int height);
 
     std::vector<std::unique_ptr<OTUI::Widget>> m_otuiWidgets;
 

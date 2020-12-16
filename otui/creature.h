@@ -9,6 +9,7 @@ namespace OTUI {
     public:
         Creature();
         Creature(QString widgetId);
+        Creature(QString widgetId, QString imagePath);
         ~Creature();
     };
 }
