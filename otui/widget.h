@@ -5,9 +5,10 @@
 #include <QObject>
 #include <QImage>
 #include <QPainter>
+#include <QVector2D>
+#include <QPointer>
 #include <QCoreApplication>
 #include "events/setidevent.h"
-#include "types/CustomTypes.h"
 #include "const.h"
 
 namespace OTUI {
@@ -25,8 +26,8 @@ namespace OTUI {
         Q_OBJECT
 
         Q_PROPERTY(QString Id READ getId WRITE setIdProperty DESIGNABLE true USER true)
-        Q_PROPERTY(Vec2 Position READ getPosition WRITE setPosition DESIGNABLE true USER true)
-        Q_PROPERTY(Point Size READ getSizeProperty WRITE setSizeProperty DESIGNABLE true USER true)
+        Q_PROPERTY(QVector2D Position READ getPosition WRITE setPosition DESIGNABLE true USER true)
+        Q_PROPERTY(QPoint Size READ getSizeProperty WRITE setSizeProperty DESIGNABLE true USER true)
 
     public:
         Widget();
@@ -62,11 +63,11 @@ namespace OTUI {
         void setIdProperty(const QString& id);
         void setId(const QString id);
 
-        Vec2 getPosition() const { return Vec2(getPos().x(), getPos().y()); }
-        void setPosition(const Vec2& position);
+        QVector2D getPosition() const { return QVector2D(getPos().x(), getPos().y()); }
+        void setPosition(const QVector2D& position);
 
-        Point getSizeProperty() const { return Point(width(), height()); }
-        void setSizeProperty(const Point& size);
+        QPoint getSizeProperty() const { return QPoint(width(), height()); }
+        void setSizeProperty(const QPoint& size);
 
         QImage image() const { return m_image; }
 

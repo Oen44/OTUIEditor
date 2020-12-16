@@ -1,6 +1,5 @@
 #include "corewindow.h"
 #include "ui_mainwindow.h"
-#include "types/CustomTypes.h"
 #include "startupwindow.h"
 
 #include <QSettings>
@@ -15,9 +14,6 @@ CoreWindow::CoreWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->openGLWidget->installEventFilter(this);
 
-    CustomTypes::registerTypes();
-    ui->propertyEditor->registerCustomPropertyCB(CustomTypes::createCustomProperty);
-
     model = new QStandardItemModel;
     ui->treeView->setModel(model);
     connect(ui->treeView->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &selected, const QItemSelection&) {
@@ -29,7 +25,6 @@ CoreWindow::CoreWindow(QWidget *parent) :
         if(m_selected != nullptr)
         {
             ui->openGLWidget->m_selected = m_selected;
-            ui->propertyEditor->setObject(m_selected);
         }
     } );
 }
@@ -118,14 +113,12 @@ void CoreWindow::on_actionDeleteWidget_triggered()
         ui->treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
         ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
         selectWidgetById(root->child(0)->text());
-        ui->propertyEditor->setObject(m_selected);
     }
     else
     {
         model->clear();
         ui->openGLWidget->clearWidgets();
         m_selected = nullptr;
-        ui->propertyEditor->clear();
     }
 }
 
@@ -169,17 +162,8 @@ bool CoreWindow::eventFilter(QObject*, QEvent* event)
                     {
                         ui->treeView->selectionModel()->select(items.at(0), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
                         ui->treeView->selectionModel()->setCurrentIndex(items.at(0), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-                        ui->propertyEditor->setObject(m_selected);
                     }
                 }
-                else
-                {
-                    ui->propertyEditor->updateObject(ui->openGLWidget->m_selected);
-                }
-            }
-            else
-            {
-                ui->propertyEditor->updateObject(m_selected);
             }
         }
     }
@@ -204,14 +188,12 @@ void CoreWindow::keyReleaseEvent(QKeyEvent* event)
             ui->treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
             ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
             selectWidgetById(root->child(0)->text());
-            ui->propertyEditor->setObject(m_selected);
         }
         else
         {
             model->clear();
             ui->openGLWidget->clearWidgets();
             m_selected = nullptr;
-            ui->propertyEditor->clear();
         }
         break;
     }
@@ -264,9 +246,6 @@ void CoreWindow::on_actionNewProject_triggered()
 
     // Clear tree
     model->clear();
-
-    // Clear properties
-    ui->propertyEditor->clear();
 
     // Clear selected
     m_selected = nullptr;
@@ -332,10 +311,6 @@ void CoreWindow::on_newMainWindow_triggered()
     }
 
     m_selected = ui->openGLWidget->addWidget(OTUI::MainWindowType, widgetId, ":/images/main_window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
-    if(m_selected != nullptr)
-    {
-        ui->propertyEditor->addObject(m_selected);
-    }
 }
 
 void CoreWindow::on_newButton_triggered()
@@ -345,10 +320,6 @@ void CoreWindow::on_newButton_triggered()
     {
         QString widgetId("button");
         m_selected = ui->openGLWidget->addWidgetChild(OTUI::ButtonType, "mainWindow", widgetId, ":/images/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
-        if(m_selected != nullptr)
-        {
-            ui->propertyEditor->setObject(m_selected);
-        }
         addChildToTree(m_selected->getId());
     }
 }
@@ -360,10 +331,6 @@ void CoreWindow::on_newLabel_triggered()
     {
         QString widgetId("label");
         m_selected = ui->openGLWidget->addWidgetChild(OTUI::LabelType, "mainWindow", widgetId, nullptr, QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
-        if(m_selected != nullptr)
-        {
-            ui->propertyEditor->setObject(m_selected);
-        }
         addChildToTree(m_selected->getId());
     }
 }
@@ -375,10 +342,6 @@ void CoreWindow::on_newUIItem_triggered()
     {
         QString widgetId("item");
         m_selected = ui->openGLWidget->addWidgetChild(OTUI::ItemType, "mainWindow", widgetId, nullptr, QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
-        if(m_selected != nullptr)
-        {
-            ui->propertyEditor->setObject(m_selected);
-        }
         addChildToTree(m_selected->getId());
     }
 }
@@ -390,10 +353,6 @@ void CoreWindow::on_newUICreature_triggered()
     {
         QString widgetId("creature");
         m_selected = ui->openGLWidget->addWidgetChild(OTUI::CreatureType, "mainWindow", widgetId, nullptr, QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
-        if(m_selected != nullptr)
-        {
-            ui->propertyEditor->setObject(m_selected);
-        }
         addChildToTree(m_selected->getId());
     }
 }

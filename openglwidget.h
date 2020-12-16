@@ -68,6 +68,8 @@ private:
     QBrush m_brushHover;
     QBrush m_brushSelected;
     QPoint offset;
+
+    QPixmap m_background;
 };
 
 #endif // OPENGLWIDGET_H

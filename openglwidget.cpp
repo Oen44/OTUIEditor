@@ -15,6 +15,8 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     QTimer *pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(update()));
     pTimer->start(1000 / 60.0);
+
+    m_background.load(":/images/background.png");
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -139,6 +141,7 @@ void OpenGLWidget::paintGL()
 
     QPainter painter(this);
     painter.scale(scale, scale);
+    painter.drawTiledPixmap(QRect(0, 0, this->width() / scale, this->height() / scale), m_background);
     for(auto const& widget : m_otuiWidgets)
     {
         OTUI::Widget* parent = widget->getParent();

@@ -6,6 +6,21 @@ QMainWindow {
     color: #7C0000;
 }
 
+#centralWidget QLabel {
+    color: #cfd0d7;
+}
+
+#bar, #bar_2, #leftBar {
+    background-color: #202020;
+    border-bottom: 1px solid #363636;
+}
+
+#bar > QPushButton, #bar_2 > QPushButton {
+    border: none;
+    border-image: none;
+    image: url(":/images/branch_open.png");
+}
+
 QPushButton[flat="true"] {
     background-color: transparent;
     border: 1px solid #fff;
@@ -97,6 +112,19 @@ QTreeView::item:selected {
     color: #fff;
 }
 
+QScrollArea, #propertiesContents {
+    border: none;
+    background-color: #121212;
+}
+
+#zoomPanel {
+    background-color: #0A0A0A;
+}
+
+QSplitter::handle {
+    background-color: #0A0A0A;
+}
+
 QMenu {
     color: #fff;
     background-color: #2A2A2A;
@@ -119,7 +147,7 @@ QMenu::item:disabled {
 
 QMenuBar {
     color: #fff;
-    background-color: #121212;
+    background-color: #0A0A0A;
 }
 
 QMenuBar::item:selected {

@@ -41,15 +41,15 @@ void OTUI::Widget::setIdProperty(const QString &id) {
     qApp->sendEvent(qApp->activeWindow(), event);
 }
 
-void OTUI::Widget::setPosition(const Vec2 &position)
+void OTUI::Widget::setPosition(const QVector2D &position)
 {
-    setPos(QPoint(position.X, position.Y));
+    setPos(QPoint(position.x(), position.y()));
 }
 
-void OTUI::Widget::setSizeProperty(const Point &size)
+void OTUI::Widget::setSizeProperty(const QPoint &size)
 {
-    m_rect.setWidth(size.width);
-    m_rect.setHeight(size.height);
+    m_rect.setWidth(size.x());
+    m_rect.setHeight(size.y());
     if(getParent() != nullptr)
     {
         if(getRect()->right() > getParent()->width())

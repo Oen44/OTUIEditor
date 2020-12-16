@@ -37,14 +37,9 @@ SOURCES += \
         otui/project.cpp \
         otui/widget.cpp \
         recentproject.cpp \
-        startupwindow.cpp \
-        types/CustomTypes.cpp \
-        types/point.cpp \
-        types/vector2.cpp \
-        types/vector3.cpp
+        startupwindow.cpp
 
 HEADERS += \
-        Property.h \
         const.h \
         corewindow.h \
         events/setidevent.h \
@@ -57,13 +52,8 @@ HEADERS += \
         otui/otui.h \
         otui/project.h \
         otui/widget.h \
-        qpropertyeditorwidget.h \
         recentproject.h \
-        startupwindow.h \
-        types/CustomTypes.h \
-        types/point.h \
-        types/vector2.h \
-        types/vector3.h
+        startupwindow.h
 
 FORMS += \
         mainwindow.ui \
@@ -80,9 +70,9 @@ RESOURCES += \
 DISTFILES += \
     stylesheet.css
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/ -lQPropertyEditor -lOpengl32
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/ -lQPropertyEditord -lOpengl32
-else:unix: LIBS += -L$$PWD/lib/ -lQPropertyEditor -lOpengl32
+win32:CONFIG(release, debug|release): LIBS += -lOpengl32
+else:win32:CONFIG(debug, debug|release): LIBS += -lOpengl32
+else:unix: LIBS += -lOpengl32
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
