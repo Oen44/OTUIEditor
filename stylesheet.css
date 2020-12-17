@@ -31,6 +31,7 @@ QPushButton[flat="true"]:hover {
     background-color: #222;
 }
 
+/* Slider Start */
 QSlider::groove:horizontal {
     border: none;
     margin-top: 10px;
@@ -58,6 +59,7 @@ QSlider::sub-page:horizontal {
     margin-top: 14px;
     margin-bottom: 14px;
 }
+/* Slider End */
 
 /* ScrollBar Start */
 QScrollBar:vertical {
@@ -133,17 +135,67 @@ RecentProject:hover {
     background-color: #222;
 }
 
-QLineEdit {
+/* Checkbox Start */
+QCheckBox {
+    spacing: 5px;
+}
+
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(:/images/checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(:/images/checkbox_unchecked_hover.png);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    image: url(:/images/checkbox_unchecked_pressed.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(:/images/checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:hover {
+    image: url(:/images/checkbox_checked_hover.png);
+}
+
+QCheckBox::indicator:checked:pressed {
+    image: url(:/images/checkbox_checked_pressed.png);
+}
+
+QCheckBox::indicator:indeterminate {
+    image: url(:/images/checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:hover {
+    image: url(:/images/checkbox_indeterminate_hover.png);
+}
+
+QCheckBox::indicator:indeterminate:pressed {
+    image: url(:/images/checkbox_indeterminate_pressed.png);
+}
+/* Checkbox End */
+
+/* Input fields Start */
+QLineEdit, QSpinBox, QDoubleSpinBox {
     background: #2A2A2A;
     color: #cfd0d7;
     border: 1px solid #525252;
     padding: 4px;
 }
 
-QLineEdit:focus {
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {
     border-color: #747474;
 }
+/* Input fields End */
 
+/* Tree View Start */
 QTreeView {
     color: #fff;
     background-color: #121212;
@@ -177,6 +229,7 @@ QTreeView::item:selected {
     background-color: #27609A;
     color: #fff;
 }
+/* Tree View End */
 
 QScrollArea, #propertiesContents, #recentListContent {
     border: none;
@@ -191,6 +244,7 @@ QSplitter::handle {
     background-color: #0A0A0A;
 }
 
+/* Menu Start */
 QMenu {
     color: #fff;
     background-color: #2A2A2A;
@@ -219,3 +273,4 @@ QMenuBar {
 QMenuBar::item:selected {
     background-color: #545454;
 }
+/* Menu End */
