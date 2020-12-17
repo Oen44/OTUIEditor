@@ -172,6 +172,8 @@ private:
     QPoint offset;
 
     QPixmap m_background;
+
+    QTimer *pTimer;
 };
 
 #endif // OPENGLWIDGET_H

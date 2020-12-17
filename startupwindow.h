@@ -39,7 +39,7 @@ private slots:
 
 private:
     Ui::StartupWindow *ui;
-    CoreWindow* w = nullptr;
+    CoreWindow* coreWindow = nullptr;
 
     std::vector<std::unique_ptr<RecentProject>> m_recentProjects;
 };

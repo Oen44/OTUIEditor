@@ -35,5 +35,6 @@ OTUI::Project::Project(QDataStream& data, QString path)
 
 OTUI::Project::~Project()
 {
-    m_File->close();
+    if(m_File && m_File->isOpen())
+        m_File->close();
 }

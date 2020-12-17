@@ -11,7 +11,7 @@ StartupWindow::StartupWindow(QWidget *parent) :
     ui->nameError->setHidden(true);
     ui->pathError->setHidden(true);
 
-    w = new CoreWindow();
+    coreWindow = new CoreWindow();
 
     QWidget* recentList = reinterpret_cast<QWidget*>(ui->recentListContent);
 
@@ -48,6 +48,7 @@ StartupWindow::StartupWindow(QWidget *parent) :
 
 StartupWindow::~StartupWindow()
 {
+    delete coreWindow;
     delete ui;
 }
 
@@ -61,8 +62,8 @@ void StartupWindow::recentProjectClicked(RecentProject* widget) {
 
     QDataStream projectData(&file);
 
-    w->loadProjectData(projectData, fileInfo.absolutePath());
-    w->show();
+    coreWindow->loadProjectData(projectData, fileInfo.absolutePath());
+    coreWindow->show();
     hide();
 
     file.close();
@@ -88,8 +89,8 @@ void StartupWindow::on_openProject_clicked()
 
         QDataStream projectData(&file);
 
-        w->loadProjectData(projectData, fileInfo.absolutePath());
-        w->show();
+        coreWindow->loadProjectData(projectData, fileInfo.absolutePath());
+        coreWindow->show();
         hide();
 
         file.close();
@@ -141,8 +142,8 @@ void StartupWindow::on_createProject_clicked()
 
     recentFile.close();
 
-    w->startNewProject(name, path);
-    w->show();
+    coreWindow->startNewProject(name, path);
+    coreWindow->show();
     hide();
 }
 

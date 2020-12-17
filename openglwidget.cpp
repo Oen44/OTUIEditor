@@ -12,7 +12,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     m_brushSelected = QBrush(QColor(0, 0, 255));
     scale = 1.0;
 
-    QTimer *pTimer = new QTimer(this);
+    pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(update()));
     pTimer->start(1000 / 60.0);
 
