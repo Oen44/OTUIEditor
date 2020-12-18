@@ -10,6 +10,7 @@ CoreWindow::CoreWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    setMinimumSize(860, 600);
     //m_sSettingsFile = QApplication::applicationDirPath().left(1) + ":/settings.ini";
     ui->setupUi(this);
     ui->openGLWidget->installEventFilter(this);
@@ -26,7 +27,10 @@ CoreWindow::CoreWindow(QWidget *parent) :
         {
             ui->openGLWidget->m_selected = m_selected;
         }
-    } );
+    });
+
+    //imagesBrowser = new ImageSourceBrowser(ui->centralWidget);
+    //imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
 }
 
 CoreWindow::~CoreWindow()
@@ -145,6 +149,11 @@ void CoreWindow::selectWidgetById(QString widgetId)
             break;
         }
     }
+}
+
+void CoreWindow::resizeEvent(QResizeEvent*)
+{
+    //imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
 }
 
 bool CoreWindow::eventFilter(QObject*, QEvent* event)

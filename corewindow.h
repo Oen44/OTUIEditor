@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include "otui/otui.h"
 #include "events/setidevent.h"
+#include "imagesourcebrowser.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,6 +54,7 @@ protected:
     void keyReleaseEvent(QKeyEvent* event);
     bool event(QEvent* event);
     void closeEvent(QCloseEvent* event);
+    void resizeEvent(QResizeEvent *event);
 
 private:
     Ui::MainWindow *ui;
@@ -69,6 +71,7 @@ private:
     QString m_sSettingsFile;
 
     OTUI::Widget* m_selected = nullptr;
+    ImageSourceBrowser* imagesBrowser;
 };
 
 #endif // COREWINDOW_H

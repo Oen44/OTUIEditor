@@ -133,6 +133,9 @@
           <property name="lineWidth">
            <number>0</number>
           </property>
+          <property name="verticalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
           <attribute name="headerVisible">
            <bool>false</bool>
           </attribute>
@@ -307,6 +310,14 @@
           <widget class="QWidget" name="propertiesContents">
            <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>256</width>
+             <height>129</height>
+            </rect>
            </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">

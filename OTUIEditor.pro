@@ -21,6 +21,7 @@ CONFIG += c++14
 SOURCES += \
         corewindow.cpp \
         events/setidevent.cpp \
+        imagesourcebrowser.cpp \
         main.cpp \
         openglwidget.cpp \
         otui/button.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
         const.h \
         corewindow.h \
         events/setidevent.h \
+        imagesourcebrowser.h \
         openglwidget.h \
         otui/button.h \
         otui/creature.h \

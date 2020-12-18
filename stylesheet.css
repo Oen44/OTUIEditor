@@ -10,6 +10,11 @@ QMainWindow {
     color: #cfd0d7;
 }
 
+#popup {
+    background-color: #202020;
+    border: 1px solid #363636;
+}
+
 #bar, #bar_2, #leftBar {
     background-color: #202020;
     border-bottom: 1px solid #363636;
@@ -21,6 +26,31 @@ QMainWindow {
     image: url(":/images/branch_open.png");
 }
 
+/* Images Browser Start */
+ImageSourceBrowser {
+    background-color: #121212;
+    border: 1px solid #fff;
+}
+
+ImageSourceBrowser QLabel {
+    color: #cfd0d7;
+}
+
+ImageSourceBrowser > #topBar {
+    background-color: #0A0A0A;
+    border-bottom: 1px solid #fff;
+}
+
+ImageSourceBrowser #leftBrowserPanel {
+    border-right: 1px solid #fff;
+}
+
+ImageSourceBrowser #rightBrowserPanel, ImageSourceBrowser #imagesBrowserGrid {
+    background-color: transparent;
+}
+
+/* Images Browser End */
+
 QPushButton[flat="true"] {
     background-color: transparent;
     border: 1px solid #fff;
@@ -28,7 +58,12 @@ QPushButton[flat="true"] {
 }
 
 QPushButton[flat="true"]:hover {
-    background-color: #222;
+    background-color: #3F3F3F;
+}
+
+QPushButton[flat="true"]:pressed {
+    padding-left: 2px;
+    padding-top: 1px;
 }
 
 /* Slider Start */
