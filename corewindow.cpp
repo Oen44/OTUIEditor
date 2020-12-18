@@ -29,8 +29,27 @@ CoreWindow::CoreWindow(QWidget *parent) :
         }
     });
 
-    //imagesBrowser = new ImageSourceBrowser(ui->centralWidget);
-    //imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
+    ElidedLabel* imageSourceLabel = new ElidedLabel("/images/ui/window.png", ui->ispContent);
+    ui->ispContent->layout()->addWidget(imageSourceLabel);
+
+    QPushButton* imageSourceOpen = new QPushButton("~", ui->ispContent);
+    imageSourceOpen->setFixedWidth(20);
+    imageSourceOpen->setFlat(true);
+    imageSourceOpen->setCursor(Qt::PointingHandCursor);
+    ui->ispContent->layout()->addWidget(imageSourceOpen);
+
+    connect(imageSourceOpen, &QPushButton::pressed, [=]() {
+        if(!imagesBrowser)
+        {
+            imagesBrowser = new ImageSourceBrowser(ui->centralWidget);
+            imagesBrowser->show();
+        }
+        else if(!imagesBrowser->isVisible())
+        {
+            imagesBrowser->show();
+        }
+        imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
+    });
 }
 
 CoreWindow::~CoreWindow()
@@ -153,7 +172,10 @@ void CoreWindow::selectWidgetById(QString widgetId)
 
 void CoreWindow::resizeEvent(QResizeEvent*)
 {
-    //imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
+    if(imagesBrowser && imagesBrowser->isVisible())
+    {
+        imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
+    }
 }
 
 bool CoreWindow::eventFilter(QObject*, QEvent* event)

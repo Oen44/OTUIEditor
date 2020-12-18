@@ -9,6 +9,7 @@
 #include "otui/otui.h"
 #include "events/setidevent.h"
 #include "imagesourcebrowser.h"
+#include "elidedlabel.h"
 
 namespace Ui {
 class MainWindow;

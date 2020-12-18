@@ -20,6 +20,7 @@ CONFIG += c++14
 
 SOURCES += \
         corewindow.cpp \
+        elidedlabel.cpp \
         events/setidevent.cpp \
         imagesourcebrowser.cpp \
         main.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
 HEADERS += \
         const.h \
         corewindow.h \
+        elidedlabel.h \
         events/setidevent.h \
         imagesourcebrowser.h \
         openglwidget.h \

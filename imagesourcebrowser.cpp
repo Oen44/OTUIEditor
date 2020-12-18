@@ -102,7 +102,7 @@ ImageSourceBrowser::~ImageSourceBrowser()
 
 void ImageSourceBrowser::handleCloseButton()
 {
-
+    this->hide();
 }
 
 void ImageSourceBrowser::onItemClicked(QTreeWidgetItem *item, int)

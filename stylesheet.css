@@ -10,6 +10,12 @@ QMainWindow {
     color: #cfd0d7;
 }
 
+ElidedLabel {
+    background: #2A2A2A;
+    color: #cfd0d7;
+    border: 1px solid #525252;
+}
+
 #popup {
     background-color: #202020;
     border: 1px solid #363636;
