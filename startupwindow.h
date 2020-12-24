@@ -33,13 +33,15 @@ private slots:
 
     void on_createProject_clicked();
 
-    void on_nameInput_textChanged(const QString &arg1);
+    void on_nameInput_textEdited(const QString &arg1);
 
-    void on_pathInput_textChanged(const QString &arg1);
+    void on_pathInput_textEdited(const QString &arg1);
 
-    void on_dataInput_textChanged(const QString &arg1);
+    void on_dataInput_textEdited(const QString &arg1);
 
     void on_browseData_clicked();
+
+    void on_backButton_clicked();
 
 private:
     Ui::StartupWindow *ui;

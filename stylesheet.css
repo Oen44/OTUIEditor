@@ -2,8 +2,8 @@ QMainWindow {
     background-color: #121212;
 }
 
-#nameError, #pathError {
-    color: #7C0000;
+#nameError, #pathError, #dataError {
+    color: #E50000;
 }
 
 #centralWidget QLabel {
@@ -32,7 +32,7 @@ ElidedLabel {
     image: url(":/images/branch_open.png");
 }
 
-/*Images Browser Start */
+/* Images Browser Start */
 ImageSourceBrowser {
     background-color: #121212;
     border: 1px solid #fff;
@@ -54,9 +54,9 @@ ImageSourceBrowser #leftBrowserPanel {
 ImageSourceBrowser #rightBrowserPanel, ImageSourceBrowser #imagesBrowserGrid {
     background-color: transparent;
 }
-/*Images Browser End */
+/* Images Browser End */
 
-/*Project Settings Start */
+/* Project Settings Start */
 ProjectSettings {
     background-color: #121212;
     border: 1px solid #fff;
@@ -70,7 +70,7 @@ ProjectSettings > #topBar {
     background-color: #0A0A0A;
     border-bottom: 1px solid #fff;
 }
-/*Project Settings End */
+/* Project Settings End */
 
 QPushButton[flat="true"] {
     background-color: transparent;
@@ -87,7 +87,7 @@ QPushButton[flat="true"]:pressed {
     padding-top: 1px;
 }
 
-/*Slider Start */
+/* Slider Start */
 QSlider::groove:horizontal {
     border: none;
     margin-top: 10px;
@@ -115,9 +115,9 @@ QSlider::sub-page:horizontal {
     margin-top: 14px;
     margin-bottom: 14px;
 }
-/*Slider End */
+/* Slider End */
 
-/*ScrollBar Start */
+/* ScrollBar Start */
 QScrollBar:vertical {
    border: none;
    width: 10px;
@@ -149,7 +149,7 @@ QScrollBar::sub-line:vertical {
    subcontrol-position: top;
    subcontrol-origin: margin;
 }
-/*Horizontal */
+/* Horizontal */
 QScrollBar:horizontal {
    border: none;
    height: 10px;
@@ -181,7 +181,7 @@ QScrollBar::sub-line:horizontal {
    subcontrol-position: left;
    subcontrol-origin: margin;
 }
-/*ScrollBar End */
+/* ScrollBar End */
 
 RecentProject {
     padding: 10px;
@@ -191,7 +191,7 @@ RecentProject:hover {
     background-color: #222;
 }
 
-/*Checkbox Start */
+/* Checkbox Start */
 QCheckBox {
     spacing: 5px;
 }
@@ -236,9 +236,9 @@ QCheckBox::indicator:indeterminate:hover {
 QCheckBox::indicator:indeterminate:pressed {
     image: url(:/images/checkbox_indeterminate_pressed.png);
 }
-/*Checkbox End */
+/* Checkbox End */
 
-/*Input fields Start */
+/* Input fields Start */
 QLineEdit, QSpinBox, QDoubleSpinBox {
     background: #2A2A2A;
     color: #cfd0d7;
@@ -249,9 +249,9 @@ QLineEdit, QSpinBox, QDoubleSpinBox {
 QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {
     border-color: #747474;
 }
-/*Input fields End */
+/* Input fields End */
 
-/*Tree View Start */
+/* Tree View Start */
 QTreeView {
     color: #fff;
     background-color: #121212;
@@ -285,7 +285,7 @@ QTreeView::item:selected {
     background-color: #27609A;
     color: #fff;
 }
-/*Tree View End */
+/* Tree View End */
 
 QScrollArea, #propertiesContents, #recentListContent {
     border: none;
@@ -300,7 +300,7 @@ QSplitter::handle {
     background-color: #0A0A0A;
 }
 
-/*Menu Start */
+/* Menu Start */
 QMenu {
     color: #fff;
     background-color: #2A2A2A;
@@ -329,4 +329,4 @@ QMenuBar {
 QMenuBar::item:selected {
     background-color: #545454;
 }
-/*Menu End */
+/* Menu End */

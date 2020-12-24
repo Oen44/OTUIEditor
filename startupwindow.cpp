@@ -168,17 +168,30 @@ void StartupWindow::on_createProject_clicked()
     hide();
 }
 
-void StartupWindow::on_nameInput_textChanged(const QString &text)
+void StartupWindow::on_nameInput_textEdited(const QString &text)
 {
     ui->nameError->setHidden(!text.trimmed().isEmpty());
 }
 
-void StartupWindow::on_pathInput_textChanged(const QString &text)
+void StartupWindow::on_pathInput_textEdited(const QString &text)
 {
     ui->pathError->setHidden(!text.trimmed().isEmpty());
 }
 
-void StartupWindow::on_dataInput_textChanged(const QString &text)
+void StartupWindow::on_dataInput_textEdited(const QString &text)
 {
     ui->dataError->setHidden(!text.trimmed().isEmpty());
+}
+
+void StartupWindow::on_backButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+    ui->nameError->setHidden(true);
+    ui->pathError->setHidden(true);
+    ui->dataError->setHidden(true);
+
+    ui->nameInput->clear();
+    ui->pathInput->clear();
+    ui->dataInput->clear();
 }
