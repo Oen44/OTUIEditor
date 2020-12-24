@@ -10,9 +10,12 @@ namespace OTUI {
     {
     public:
         Project();
-        Project(QString data, QString path);
-        Project(QDataStream& data, QString path);
+        Project(QString fileName, QString data, QString path, QString dataPath);
+        Project(QDataStream &data, QString fileName, QString path);
         ~Project();
+
+    public:
+        bool save();
 
         bool loaded() const {
             return m_File && m_File->isOpen();
@@ -20,6 +23,10 @@ namespace OTUI {
 
         bool isChanged() const {
             return m_Changed;
+        }
+
+        void setChanged(bool v) {
+            m_Changed = v;
         }
 
         QString getProjectName() const {
@@ -38,7 +45,15 @@ namespace OTUI {
             m_Path = path;
         }
 
-        QFile* getProjectFile() {
+        QString getDataPath() const {
+            return m_Data;
+        }
+
+        void setDataPath(QString v) {
+            m_Data = v;
+        }
+
+        QFile *getProjectFile() {
             return m_File;
         }
 
@@ -46,7 +61,8 @@ namespace OTUI {
         bool m_Changed = false;
         QString m_Name;
         QString m_Path;
-        QFile* m_File = nullptr;
+        QString m_Data;
+        QFile *m_File = nullptr;
 
     };
 }

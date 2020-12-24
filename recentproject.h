@@ -11,17 +11,17 @@ class RecentProject : public QFrame
 {
     Q_OBJECT
 public:
-    RecentProject(QString name, QString path, QString date);
+    RecentProject(QString fileName, QString name, QString path, QString date);
     explicit RecentProject(QFrame *parent = nullptr);
 
 signals:
-    void clicked(RecentProject* widget);
+    void clicked(RecentProject *widget);
 
 protected:
     void mouseReleaseEvent(QMouseEvent*);
 
 public:
-    QString name;
+    QString fileName;
     QString path;
     QString date;
 };

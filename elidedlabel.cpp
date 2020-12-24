@@ -11,11 +11,13 @@ ElidedLabel::ElidedLabel(const QString &text, QWidget *parent)
 {
     setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
     setEnabled(false);
+    setToolTip(text);
 }
 
 void ElidedLabel::setText(const QString &newText)
 {
     content = newText;
+    setToolTip(newText);
     update();
 }
 

@@ -40,11 +40,11 @@ void OTUI::Widget::setId(const QString id) {
 void OTUI::Widget::setIdProperty(const QString &id) {
     if(m_id == nullptr || id.size() == 0) return;
 
-    SetIdEvent* event = new SetIdEvent();
+    SetIdEvent *event = new SetIdEvent();
     event->oldId = m_id;
     event->newId = id;
     m_id = id;
-    qApp->sendEvent(qApp->activeWindow(), event);
+    qApp->postEvent(qApp->activeWindow(), event);
 }
 
 void OTUI::Widget::setPosition(const QVector2D &position)

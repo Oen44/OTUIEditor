@@ -22,7 +22,7 @@ public:
     explicit StartupWindow(QWidget *parent = nullptr);
     ~StartupWindow();
 
-    void recentProjectClicked(RecentProject* widget);
+    void recentProjectClicked(RecentProject *widget);
 
 private slots:
     void on_newProject_clicked();
@@ -37,9 +37,13 @@ private slots:
 
     void on_pathInput_textChanged(const QString &arg1);
 
+    void on_dataInput_textChanged(const QString &arg1);
+
+    void on_browseData_clicked();
+
 private:
     Ui::StartupWindow *ui;
-    CoreWindow* coreWindow = nullptr;
+    CoreWindow *coreWindow = nullptr;
 
     std::vector<std::unique_ptr<RecentProject>> m_recentProjects;
 };

@@ -1,5 +1,5 @@
 #include "setidevent.h"
 
-OTUI::SetIdEvent::SetIdEvent() : QEvent(eventType) {}
+SetIdEvent::SetIdEvent() : QEvent(eventType) {}
 
-OTUI::SetIdEvent::~SetIdEvent() {}
+SetIdEvent::~SetIdEvent() {}

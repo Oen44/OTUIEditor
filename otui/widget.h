@@ -45,7 +45,7 @@ namespace OTUI {
         bool m_destroyed = false;
         bool m_clipping = false;
 
-        OTUI::Widget* m_parent;
+        OTUI::Widget *m_parent;
 
     public:
         bool operator == (const Widget &Ref) const
@@ -54,14 +54,14 @@ namespace OTUI {
         }
 
         QString getId() const { return m_id; }
-        void setIdProperty(const QString& id);
+        void setIdProperty(const QString &id);
         void setId(const QString id);
 
         QVector2D getPosition() const { return QVector2D(getPos().x(), getPos().y()); }
-        void setPosition(const QVector2D& position);
+        void setPosition(const QVector2D &position);
 
         QPoint getSizeProperty() const { return QPoint(width(), height()); }
-        void setSizeProperty(const QPoint& size);
+        void setSizeProperty(const QPoint &size);
 
         QImage image() const { return m_image; }
 
@@ -71,7 +71,7 @@ namespace OTUI {
         int height() const { return m_rect.y() + m_rect.height() - m_rect.top(); }
         QPoint getPos() const { return m_rect.topLeft(); }
         QPoint getSize() const { return QPoint(m_rect.width(), m_rect.height()); }
-        QRect* getRect() { return &m_rect; }
+        QRect *getRect() { return &m_rect; }
         QRect getParentRect() const { return QRect(m_rect.left() + m_parent->getRect()->left(),
                                              m_rect.top() + m_parent->getRect()->top(),
                                              m_rect.right(), m_rect.bottom()); }
@@ -104,12 +104,12 @@ namespace OTUI {
             m_imageBorder = border;
         }
 
-        OTUI::Widget* getParent() const { return m_parent; }
-        void setParent(OTUI::Widget* parent) {
+        OTUI::Widget *getParent() const { return m_parent; }
+        void setParent(OTUI::Widget *parent) {
             m_parent = parent;
         }
 
-        const QFont& getFont() const { return m_font; }
+        const QFont &getFont() const { return m_font; }
         QColor getColor() const { return m_color; }
 
     protected:

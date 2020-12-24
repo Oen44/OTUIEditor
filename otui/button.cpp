@@ -15,7 +15,7 @@ OTUI::Button::~Button()
 
 }
 
-void OTUI::Button::draw(QPainter& painter)
+void OTUI::Button::draw(QPainter &painter)
 {
     painter.save();
     painter.setPen(getColor());

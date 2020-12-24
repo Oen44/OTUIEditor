@@ -37,7 +37,7 @@ namespace OTUI {
     };
 
     template <typename T>
-    struct reversion_wrapper { T& iterable; };
+    struct reversion_wrapper { T &iterable; };
 
     template <typename T>
     auto begin (reversion_wrapper<T> w) { return std::rbegin(w.iterable); }
@@ -46,7 +46,7 @@ namespace OTUI {
     auto end (reversion_wrapper<T> w) { return std::rend(w.iterable); }
 
     template <typename T>
-    reversion_wrapper<T> reverse (T&& iterable) { return { iterable }; }
+    reversion_wrapper<T> reverse (T &iterable) { return { iterable }; }
 }
 
 #endif // CONST_H

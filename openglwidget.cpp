@@ -35,9 +35,9 @@ void OpenGLWidget::paintGL()
     QPainter painter(this);
     painter.scale(scale, scale);
     painter.drawTiledPixmap(QRect(0, 0, this->width() / scale, this->height() / scale), m_background);
-    for(auto const& widget : m_otuiWidgets)
+    for(auto const &widget : m_otuiWidgets)
     {
-        OTUI::Widget* parent = widget->getParent();
+        OTUI::Widget *parent = widget->getParent();
         if(!widget->image().isNull())
         {
             if(widget->getImageBorder().isNull())
@@ -77,12 +77,12 @@ void OpenGLWidget::paintGL()
     }
 }
 
-void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
+void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     m_mousePos = QPoint(event->x() / scale, event->y() / scale);
     if(m_selected)
     {
-        OTUI::Widget* parent = m_selected->getParent();
+        OTUI::Widget *parent = m_selected->getParent();
         QRect parentBorder = QRect();
         if(parent)
         {
@@ -92,7 +92,7 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
         {
             if(m_mousePressedPivot != OTUI::NoPivot)
             {
-                QRect* rect = m_selected->getRect();
+                QRect *rect = m_selected->getRect();
                 QPoint parentOffset(0, 0);
                 if(parent)
                 {
@@ -184,7 +184,7 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
-void OpenGLWidget::mousePressEvent(QMouseEvent* event)
+void OpenGLWidget::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
@@ -192,9 +192,9 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
         m_mousePressed = true;
         bool selected = false;
         m_selected = nullptr;
-        for(auto& widget : reverse(m_otuiWidgets))
+        for(auto &widget : reverse(m_otuiWidgets))
         {
-            OTUI::Widget* parent = widget->getParent();
+            OTUI::Widget *parent = widget->getParent();
             if(parent)
             {
                 QRect widgetRect(widget->x() + parent->x() - PIVOT_WIDTH / 2,
@@ -230,7 +230,7 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
     }
 }
 
-void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
+void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
@@ -239,11 +239,11 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
     }
 }
 
-void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
+void OpenGLWidget::keyReleaseEvent(QKeyEvent *event)
 {
     if(!m_selected) return;
 
-    QRect* rect = m_selected->getRect();
+    QRect *rect = m_selected->getRect();
     QPoint newPos(rect->topLeft());
 
     switch(event->key())
@@ -270,7 +270,7 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
     }
     }
 
-    OTUI::Widget* parent = m_selected->getParent();
+    OTUI::Widget *parent = m_selected->getParent();
 
     if(parent)
     {
@@ -296,12 +296,12 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event)
     }
 }
 
-void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const& widget)
+void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const &widget)
 {
     drawBorderImage(painter, widget, widget.x(), widget.y());
 }
 
-void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const& widget, int x, int y)
+void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const &widget, int x, int y)
 {
     int top = widget.getImageBorder().y();
     int bottom = widget.getImageBorder().height();
@@ -373,7 +373,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     QBrush brush = m_brushNormal;
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::TopLeft))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::TopLeft))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::TopLeft;
@@ -388,7 +388,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     rect.setRect(left + width / 2 - PIVOT_WIDTH / 2, top - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Top))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Top))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::Top;
@@ -403,7 +403,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     rect.setRect(left + width - PIVOT_WIDTH / 2, top - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::TopRight))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::TopRight))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::TopRight;
@@ -418,7 +418,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     rect.setRect(left - PIVOT_WIDTH / 2, top + height / 2 - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Left))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Left))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::Left;
@@ -433,7 +433,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     rect.setRect(left + width - PIVOT_WIDTH / 2, top + height / 2 - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Right))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Right))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::Right;
@@ -448,7 +448,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     rect.setRect(left - PIVOT_WIDTH / 2, top + height - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::BottomLeft))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::BottomLeft))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::BottomLeft;
@@ -463,7 +463,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     rect.setRect(left + width / 2 - PIVOT_WIDTH / 2, top + height - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Bottom))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::Bottom))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::Bottom;
@@ -478,7 +478,7 @@ void OpenGLWidget::drawPivots(QPainter &painter, int left, int top, int width, i
     rect.setRect(left + width - PIVOT_WIDTH / 2, top + height - PIVOT_HEIGHT / 2, PIVOT_WIDTH, PIVOT_HEIGHT);
     if(rect.contains(m_mousePos))
     {
-        if(m_mousePressed && (m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::BottomRight))
+        if(m_mousePressed &&(m_mousePressedPivot == OTUI::NoPivot || m_mousePressedPivot == OTUI::BottomRight))
         {
             brush = m_brushSelected;
             m_mousePressedPivot = OTUI::BottomRight;

@@ -10,15 +10,25 @@ CoreWindow::CoreWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+}
+
+CoreWindow::~CoreWindow()
+{
+    delete std::exchange(imagesBrowser, nullptr);
+    delete std::exchange(m_projectSettings, nullptr);
+    delete ui;
+}
+
+void CoreWindow::initializeWindow()
+{
     setMinimumSize(860, 600);
-    //m_sSettingsFile = QApplication::applicationDirPath().left(1) + ":/settings.ini";
     ui->setupUi(this);
     ui->openGLWidget->installEventFilter(this);
 
     model = new QStandardItemModel;
     ui->treeView->setModel(model);
     connect(ui->treeView->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &selected, const QItemSelection&) {
-        QStandardItem* newitem = model->itemFromIndex(selected.indexes().first());
+        QStandardItem *newitem = model->itemFromIndex(selected.indexes().first());
         m_selected = nullptr;
 
         selectWidgetById(newitem->text());
@@ -29,10 +39,10 @@ CoreWindow::CoreWindow(QWidget *parent) :
         }
     });
 
-    ElidedLabel* imageSourceLabel = new ElidedLabel("/images/ui/window.png", ui->ispContent);
+    ElidedLabel *imageSourceLabel = new ElidedLabel("/images/ui/window.png", ui->ispContent);
     ui->ispContent->layout()->addWidget(imageSourceLabel);
 
-    QPushButton* imageSourceOpen = new QPushButton("~", ui->ispContent);
+    QPushButton *imageSourceOpen = new QPushButton("~", ui->ispContent);
     imageSourceOpen->setFixedWidth(20);
     imageSourceOpen->setFlat(true);
     imageSourceOpen->setCursor(Qt::PointingHandCursor);
@@ -50,11 +60,9 @@ CoreWindow::CoreWindow(QWidget *parent) :
         }
         imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
     });
-}
 
-CoreWindow::~CoreWindow()
-{
-    delete ui;
+    m_projectSettings = new ProjectSettings(this);
+    m_projectSettings->hide();
 }
 
 void CoreWindow::ShowError(QString title, QString description)
@@ -64,121 +72,76 @@ void CoreWindow::ShowError(QString title, QString description)
     messageBox.setFixedSize(300, 80);
 }
 
-void CoreWindow::startNewProject(QString name, QString path)
+void CoreWindow::startNewProject(QString fileName, QString name, QString path, QString dataPath)
 {
-    OTUI::Project m_Project(name, path);
+    m_Project = new OTUI::Project(fileName, name, path, dataPath);
 
-    if(!m_Project.loaded())
+    if(!m_Project->loaded())
         return;
 
+    initializeWindow();
     setWindowTitle(name + " - OTUI Editor");
+    m_projectSettings->setProjectName(name);
+    m_projectSettings->setDataPath(dataPath);
 }
 
-void CoreWindow::loadProjectData(QDataStream& data, QString path)
+void CoreWindow::loadProjectData(QDataStream &data, QString fileName, QString path)
 {
-    OTUI::Project m_Project(data, path);
+    m_Project = new OTUI::Project(data, fileName, path);
 
-    if(!m_Project.loaded())
+    if(!m_Project->loaded())
         return;
 
+    initializeWindow();
     // TODO: Initialize widgets
 
-    setWindowTitle(m_Project.getProjectName() + " - OTUI Editor");
+    setWindowTitle(m_Project->getProjectName() + " - OTUI Editor");
+    m_projectSettings->setProjectName(m_Project->getProjectName());
+    m_projectSettings->setDataPath(m_Project->getDataPath());
 }
 
-void CoreWindow::loadSettings()
+bool CoreWindow::event(QEvent *event)
 {
-    QSettings settings(m_sSettingsFile, QSettings::NativeFormat);
-    QString sText = settings.value("text", "").toString();
-}
-
-void CoreWindow::saveSettings()
-{
-    QSettings settings(m_sSettingsFile, QSettings::NativeFormat);
-    settings.setValue("text", "");
-}
-
-void CoreWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
-{
-    QMenu menu(this);
-    ui->actionDeleteWidget->setEnabled(ui->treeView->indexAt(pos).isValid());
-
-    menu.addAction(ui->actionDeleteWidget);
-
-    menu.addSeparator();
-
-    QMenu* newMenu = menu.addMenu("New...");
-
-    newMenu->addAction(ui->newMainWindow);
-    newMenu->addAction(ui->newButton);
-    newMenu->addAction(ui->newLabel);
-    newMenu->addAction(ui->newUIItem);
-    newMenu->addAction(ui->newUICreature);
-    newMenu->addSeparator();
-
-    QMenu* customMenu = newMenu->addMenu("Custom");
-    customMenu->setDisabled(true);
-    customMenu->addAction(ui->newButton);
-
-    menu.exec(ui->treeView->mapToGlobal(pos));
-}
-
-void CoreWindow::on_actionDeleteWidget_triggered()
-{
-    auto idx = ui->treeView->currentIndex();
-    if(idx.parent().isValid())
+    switch(event->type())
     {
-        QStandardItem* item = model->itemFromIndex(idx);
-        ui->openGLWidget->deleteWidget(item->text());
-        model->removeRow(idx.row(), idx.parent());
-        QStandardItem* root = model->invisibleRootItem();
-        QModelIndex index = root->child(0)->index();
-        ui->treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-        ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-        selectWidgetById(root->child(0)->text());
-    }
-    else
+    case SetIdEvent::eventType:
     {
-        model->clear();
-        ui->openGLWidget->clearWidgets();
-        m_selected = nullptr;
-    }
-}
-
-void CoreWindow::addChildToTree(QString label)
-{
-    QModelIndex index = ui->treeView->currentIndex();
-    QStandardItem* item = model->itemFromIndex(index);
-    QStandardItem* newItem = new QStandardItem(label);
-    newItem->setEditable(false);
-    item->appendRow(newItem);
-    ui->treeView->expand(index);
-    ui->treeView->selectionModel()->select(newItem->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-    ui->treeView->selectionModel()->setCurrentIndex(newItem->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-    selectWidgetById(newItem->text());
-}
-
-void CoreWindow::selectWidgetById(QString widgetId)
-{
-    for(auto& widget : ui->openGLWidget->getOTUIWidgets())
-    {
-        if(widget->getId() == widgetId)
+        SetIdEvent *setIdEvent = reinterpret_cast<SetIdEvent*>(event);
+        QModelIndexList items = model->match(model->index(0, 0), Qt::DisplayRole, QVariant::fromValue(setIdEvent->oldId), 1, Qt::MatchRecursive);
+        if(!items.isEmpty())
         {
-            m_selected = widget.get();
-            break;
+            model->itemFromIndex(items.at(0))->setText(setIdEvent->newId);
+            setProjectChanged(true);
         }
+        break;
     }
+    case SettingsSavedEvent::eventType:
+    {
+        m_Project->setProjectName(m_projectSettings->getProjectName());
+        m_Project->setDataPath(m_projectSettings->getDataPath());
+        setProjectChanged(true);
+        break;
+    }
+
+    default:
+        return QMainWindow::event(event);
+    }
+
+    return QMainWindow::event(event);
 }
 
 void CoreWindow::resizeEvent(QResizeEvent*)
 {
+    if(isHidden()) return;
+
     if(imagesBrowser && imagesBrowser->isVisible())
-    {
         imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
-    }
+
+    if(m_projectSettings && m_projectSettings->isVisible())
+        m_projectSettings->move(this->rect().center() - m_projectSettings->rect().center());
 }
 
-bool CoreWindow::eventFilter(QObject*, QEvent* event)
+bool CoreWindow::eventFilter(QObject*, QEvent *event)
 {
     if(event->type() == QEvent::MouseButtonRelease) {
         if(m_selected != nullptr)
@@ -201,7 +164,7 @@ bool CoreWindow::eventFilter(QObject*, QEvent* event)
     return false;
 }
 
-void CoreWindow::keyReleaseEvent(QKeyEvent* event)
+void CoreWindow::keyReleaseEvent(QKeyEvent *event)
 {
     switch(event->key())
     {
@@ -211,10 +174,10 @@ void CoreWindow::keyReleaseEvent(QKeyEvent* event)
         auto idx = ui->treeView->currentIndex();
         if(idx.parent().isValid())
         {
-            QStandardItem* item = model->itemFromIndex(idx);
+            QStandardItem *item = model->itemFromIndex(idx);
             ui->openGLWidget->deleteWidget(item->text());
             model->removeRow(idx.row(), idx.parent());
-            QStandardItem* root = model->invisibleRootItem();
+            QStandardItem *root = model->invisibleRootItem();
             QModelIndex index = root->child(0)->index();
             ui->treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
             ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
@@ -226,29 +189,21 @@ void CoreWindow::keyReleaseEvent(QKeyEvent* event)
             ui->openGLWidget->clearWidgets();
             m_selected = nullptr;
         }
+        setProjectChanged(true);
         break;
     }
 
     }
 }
 
-bool CoreWindow::event(QEvent* event)
-{
-    if(event->type() == OTUI::SetIdEvent::eventType)
-    {
-        OTUI::SetIdEvent* setIdEvent = reinterpret_cast<OTUI::SetIdEvent*>(event);
-        QModelIndexList items = model->match(model->index(0, 0), Qt::DisplayRole, QVariant::fromValue(setIdEvent->oldId), 1, Qt::MatchRecursive);
-        if(!items.isEmpty())
-        {
-            model->itemFromIndex(items.at(0))->setText(setIdEvent->newId);
-        }
-    }
-
-    return QMainWindow::event(event);
-}
-
 void CoreWindow::closeEvent(QCloseEvent *event)
 {
+    if(!m_Project->isChanged())
+    {
+        event->accept();
+        return;
+    }
+
     QMessageBox box;
     QMessageBox::StandardButton response = box.question(this, "Save Changes",
                  "Do you want to save this project before closing?",
@@ -257,8 +212,10 @@ void CoreWindow::closeEvent(QCloseEvent *event)
 
     if(response == QMessageBox::Yes)
     {
-        // TODO: Save project
-        event->accept();
+        if(m_Project->save())
+            event->accept();
+        else
+            event->ignore();
     }
     else if(response == QMessageBox::No)
         event->accept();
@@ -266,13 +223,102 @@ void CoreWindow::closeEvent(QCloseEvent *event)
         event->ignore();
 }
 
+void CoreWindow::addChildToTree(QString label)
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    QStandardItem *item = model->itemFromIndex(index);
+    QStandardItem *newItem = new QStandardItem(label);
+    newItem->setEditable(false);
+    item->appendRow(newItem);
+    ui->treeView->expand(index);
+    ui->treeView->selectionModel()->select(newItem->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    ui->treeView->selectionModel()->setCurrentIndex(newItem->index(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    selectWidgetById(newItem->text());
+    setProjectChanged(true);
+}
+
+void CoreWindow::selectWidgetById(QString widgetId)
+{
+    for(auto &widget : ui->openGLWidget->getOTUIWidgets())
+    {
+        if(widget->getId() == widgetId)
+        {
+            m_selected = widget.get();
+            break;
+        }
+    }
+}
+
+void CoreWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
+{
+    QMenu menu(this);
+    ui->actionDeleteWidget->setEnabled(ui->treeView->indexAt(pos).isValid());
+
+    menu.addAction(ui->actionDeleteWidget);
+
+    menu.addSeparator();
+
+    QMenu *newMenu = menu.addMenu("New...");
+
+    newMenu->addAction(ui->newMainWindow);
+    newMenu->addAction(ui->newButton);
+    newMenu->addAction(ui->newLabel);
+    newMenu->addAction(ui->newUIItem);
+    newMenu->addAction(ui->newUICreature);
+    newMenu->addSeparator();
+
+    QMenu *customMenu = newMenu->addMenu("Custom");
+    customMenu->setDisabled(true);
+    customMenu->addAction(ui->newButton);
+
+    menu.exec(ui->treeView->mapToGlobal(pos));
+}
+
+void CoreWindow::on_actionDeleteWidget_triggered()
+{
+    auto idx = ui->treeView->currentIndex();
+    if(idx.parent().isValid())
+    {
+        QStandardItem *item = model->itemFromIndex(idx);
+        ui->openGLWidget->deleteWidget(item->text());
+        model->removeRow(idx.row(), idx.parent());
+        QStandardItem *root = model->invisibleRootItem();
+        QModelIndex index = root->child(0)->index();
+        ui->treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+        ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+        selectWidgetById(root->child(0)->text());
+    }
+    else
+    {
+        model->clear();
+        ui->openGLWidget->clearWidgets();
+        m_selected = nullptr;
+    }
+    setProjectChanged(true);
+}
+
 void CoreWindow::on_actionNewProject_triggered()
 {
-    // TODO: ask to save current project
-
-    if(m_Project.getProjectFile()->isOpen())
+    if(m_Project->isChanged())
     {
-        m_Project.getProjectFile()->close();
+        QMessageBox box;
+        QMessageBox::StandardButton response = box.question(this, "Save Changes",
+                     "Do you want to save this project before closing?",
+                     QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+                     QMessageBox::Yes);
+
+        if(response == QMessageBox::Yes)
+        {
+            if(!m_Project->save())
+                return;
+        }
+        else if(response == QMessageBox::Cancel)
+            return;
+    }
+
+    if(m_Project->getProjectFile()->isOpen())
+    {
+        m_Project->getProjectFile()->close();
     }
 
     // Clear tree
@@ -287,12 +333,13 @@ void CoreWindow::on_actionNewProject_triggered()
 
 void CoreWindow::on_actionSaveProject_triggered()
 {
-    // Save changes
+    if(m_Project->save())
+        setWindowTitle(m_Project->getProjectName() + " - OTUI Editor");
 }
 
 void CoreWindow::on_actionCloseProject_triggered()
 {
-    if(m_Project.isChanged())
+    if(m_Project->isChanged())
     {
         QMessageBox box;
         QMessageBox::StandardButton response = box.question(this, "Save Changes",
@@ -302,14 +349,19 @@ void CoreWindow::on_actionCloseProject_triggered()
 
         if(response == QMessageBox::Yes)
         {
-            // TODO: Save changes
+            if(!m_Project->save())
+                return;
         }
         else if(response == QMessageBox::Cancel)
             return;
     }
 
-    m_Project.getProjectFile()->close();
-    StartupWindow* w = new StartupWindow();
+    if(m_Project)
+    {
+        m_Project->getProjectFile()->close();
+    }
+
+    StartupWindow *w = new StartupWindow();
     w->show();
     hide();
 
@@ -331,8 +383,8 @@ void CoreWindow::on_newMainWindow_triggered()
     }
     else
     {
-        QStandardItem* root = model->invisibleRootItem();
-        QStandardItem* item = new QStandardItem(widgetId);
+        QStandardItem *root = model->invisibleRootItem();
+        QStandardItem *item = new QStandardItem(widgetId);
         item->setEditable(false);
         root->appendRow(item);
         model->setHeaderData(0, Qt::Horizontal, "Widgets List");
@@ -342,6 +394,7 @@ void CoreWindow::on_newMainWindow_triggered()
     }
 
     m_selected = ui->openGLWidget->addWidget<OTUI::MainWindow>(widgetId, ":/images/main_window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
+    setProjectChanged(true);
 }
 
 void CoreWindow::on_newButton_triggered()
@@ -352,6 +405,7 @@ void CoreWindow::on_newButton_triggered()
         QString widgetId("button");
         m_selected = ui->openGLWidget->addWidgetChild<OTUI::Button>("mainWindow", widgetId, ":/images/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
         addChildToTree(m_selected->getId());
+        setProjectChanged(true);
     }
 }
 
@@ -363,6 +417,7 @@ void CoreWindow::on_newLabel_triggered()
         QString widgetId("label");
         m_selected = ui->openGLWidget->addWidgetChild<OTUI::Label>("mainWindow", widgetId, nullptr, QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
+        setProjectChanged(true);
     }
 }
 
@@ -374,6 +429,7 @@ void CoreWindow::on_newUIItem_triggered()
         QString widgetId("item");
         m_selected = ui->openGLWidget->addWidgetChild<OTUI::Item>("mainWindow", widgetId, nullptr, QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
+        setProjectChanged(true);
     }
 }
 
@@ -385,5 +441,20 @@ void CoreWindow::on_newUICreature_triggered()
         QString widgetId("creature");
         m_selected = ui->openGLWidget->addWidgetChild<OTUI::Creature>("mainWindow", widgetId, nullptr, QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
+        setProjectChanged(true);
     }
+}
+
+void CoreWindow::on_actionProject_Settings_triggered()
+{
+    m_projectSettings->move(this->rect().center() - m_projectSettings->rect().center());
+    m_projectSettings->show();
+}
+
+void CoreWindow::setProjectChanged(bool v) {
+    if(v)
+        setWindowTitle(m_Project->getProjectName() + " * - OTUI Editor");
+    else
+        setWindowTitle(m_Project->getProjectName() + " - OTUI Editor");
+    m_Project->setChanged(v);
 }

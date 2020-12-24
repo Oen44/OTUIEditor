@@ -12,7 +12,7 @@ OTUI::MainWindow::~MainWindow()
 {
 }
 
-void OTUI::MainWindow::draw(QPainter& painter)
+void OTUI::MainWindow::draw(QPainter &painter)
 {
     painter.save();
     painter.setPen(getColor());

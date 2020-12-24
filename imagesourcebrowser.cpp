@@ -2,7 +2,7 @@
 
 ImageSourceBrowser::ImageSourceBrowser(QWidget *parent) : QFrame(parent)
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setSpacing(0);
     layout->setMargin(0);
 
@@ -19,7 +19,7 @@ ImageSourceBrowser::ImageSourceBrowser(QWidget *parent) : QFrame(parent)
     topBar->setMaximumHeight(20);
     topBar->setLineWidth(0);
 
-    QHBoxLayout* topBarLayout = new QHBoxLayout(topBar);
+    QHBoxLayout *topBarLayout = new QHBoxLayout(topBar);
     topBarLayout->setSpacing(0);
     topBarLayout->setContentsMargins(3, 0, 3, 0);
 
@@ -42,7 +42,7 @@ ImageSourceBrowser::ImageSourceBrowser(QWidget *parent) : QFrame(parent)
 
     contentPanel = new QWidget(this);
 
-    QGridLayout* contentLayout = new QGridLayout(contentPanel);
+    QGridLayout *contentLayout = new QGridLayout(contentPanel);
     contentLayout->setSpacing(0);
     contentLayout->setMargin(0);
 
@@ -57,18 +57,18 @@ ImageSourceBrowser::ImageSourceBrowser(QWidget *parent) : QFrame(parent)
     connect(directoryList, &QTreeWidget::itemClicked, this, &ImageSourceBrowser::onItemClicked);
     connect(directoryList, &QTreeWidget::itemActivated, this, &ImageSourceBrowser::onItemClicked);
 
-    QGridLayout* directoryListLayout = new QGridLayout(directoryList);
+    QGridLayout *directoryListLayout = new QGridLayout(directoryList);
     directoryListLayout->setContentsMargins(0, 0, 2, 0);
     directoryListLayout->setSpacing(0);
 
-    QTreeWidgetItem* topLevelItem = new QTreeWidgetItem(directoryList);
+    QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(directoryList);
     directoryList->addTopLevelItem(topLevelItem);
     topLevelItem->setText(0, "data");
 
     QDirIterator it("D:/Projects/Tibia/Revolution/otclientv8/data", QDir::NoDotAndDotDot | QDir::Dirs);
     while (it.hasNext()) {
         QString n = it.next();
-        QTreeWidgetItem* item = new QTreeWidgetItem(topLevelItem);
+        QTreeWidgetItem *item = new QTreeWidgetItem(topLevelItem);
         item->setText(0, n.right(n.length() - n.lastIndexOf("/") - 1));
         recursivelyGetDirectory(n, item);
     }
@@ -112,7 +112,7 @@ void ImageSourceBrowser::onItemClicked(QTreeWidgetItem *item, int)
     QString path("D:/Projects/Tibia/Revolution/otclientv8/data/");
     if (item->text(0) != "data")
     {
-        QTreeWidgetItem* parent = item->parent();
+        QTreeWidgetItem *parent = item->parent();
         QStringList parentList;
         while(parent && parent->text(0) != "data")
         {
@@ -131,18 +131,18 @@ void ImageSourceBrowser::onItemClicked(QTreeWidgetItem *item, int)
 
 void ImageSourceBrowser::addImageToGrid(QString title, QString path)
 {
-    QWidget* item = new QWidget;
+    QWidget *item = new QWidget;
     item->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    QVBoxLayout* itemLayout = new QVBoxLayout(item);
+    QVBoxLayout *itemLayout = new QVBoxLayout(item);
     itemLayout->setMargin(0);
     itemLayout->setSpacing(4);
 
-    QLabel* imageWidget = new QLabel;
+    QLabel *imageWidget = new QLabel;
     imageWidget->setAlignment(Qt::AlignCenter);
     QPixmap pic(path);
     imageWidget->setPixmap(pic);
 
-    QLabel* imageTitle = new QLabel(title);
+    QLabel *imageTitle = new QLabel(title);
     imageTitle->setAlignment(Qt::AlignCenter);
 
     itemLayout->addWidget(imageWidget);
@@ -151,12 +151,12 @@ void ImageSourceBrowser::addImageToGrid(QString title, QString path)
     imagesGridLayout->addWidget(item, imagesGridLayout->count() > 0 ? imagesGridLayout->count() / 2 : 0, imagesGridLayout->count() % 2 == 0 ? 0 : 1);
 }
 
-void ImageSourceBrowser::recursivelyGetDirectory(QString path, QTreeWidgetItem* parent)
+void ImageSourceBrowser::recursivelyGetDirectory(QString path, QTreeWidgetItem *parent)
 {
     QDirIterator it(path, QDir::NoDotAndDotDot | QDir::Dirs);
     while (it.hasNext()) {
         QString n = it.next();
-        QTreeWidgetItem* item = new QTreeWidgetItem(parent);
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, n.right(n.length() - n.lastIndexOf("/") - 1));
         recursivelyGetDirectory(n, item);
     }

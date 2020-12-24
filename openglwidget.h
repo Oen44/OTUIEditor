@@ -22,11 +22,11 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-    void keyReleaseEvent(QKeyEvent* event);
+    void keyReleaseEvent(QKeyEvent *event);
 
 public:
     template <class T>
-    OTUI::Widget* addWidget(QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
+    OTUI::Widget *addWidget(QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
     {
         std::unique_ptr<OTUI::Widget> widget = initializeWidget<T>(widgetId, imagePath);
 
@@ -47,10 +47,10 @@ public:
     }
 
     template <class T>
-    OTUI::Widget* addWidgetChild(QString parentId, QString& widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
+    OTUI::Widget *addWidgetChild(QString parentId, QString &widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
     {
-        OTUI::Widget* parent = nullptr;
-        for(auto& w : m_otuiWidgets)
+        OTUI::Widget *parent = nullptr;
+        for(auto &w : m_otuiWidgets)
         {
             if(w->getId() == parentId)
             {
@@ -85,7 +85,7 @@ public:
         return m_selected;
     }
 
-    std::vector<std::unique_ptr<OTUI::Widget>> const& getOTUIWidgets() const { return m_otuiWidgets; }
+    std::vector<std::unique_ptr<OTUI::Widget>> const &getOTUIWidgets() const { return m_otuiWidgets; }
     void deleteWidget(QString widgetId) {
         auto itr = std::find_if(std::begin(m_otuiWidgets),
                                 std::end(m_otuiWidgets),
@@ -98,7 +98,7 @@ public:
         m_otuiWidgets.clear();
     }
 
-    OTUI::Widget* m_selected = nullptr;
+    OTUI::Widget *m_selected = nullptr;
 
     double scale;
 
@@ -110,7 +110,7 @@ private:
 
         uint8_t found = 0;
 
-        for(auto const& w : m_otuiWidgets)
+        for(auto const &w : m_otuiWidgets)
         {
             if(w->getId() == widgetId)
                 found++;
@@ -126,9 +126,9 @@ private:
         return widget;
     }
 
-    void setInBounds(OTUI::Widget* widget, QPoint newPos)
+    void setInBounds(OTUI::Widget *widget, QPoint newPos)
     {
-        OTUI::Widget* parent = widget->getParent();
+        OTUI::Widget *parent = widget->getParent();
         QRect parentBorder = QRect();
         if(parent != nullptr)
         {
@@ -154,8 +154,8 @@ private:
     const uint8_t PIVOT_WIDTH = 8;
     const uint8_t PIVOT_HEIGHT = 8;
 
-    void drawBorderImage(QPainter &painter, OTUI::Widget const& widget);
-    void drawBorderImage(QPainter &painter, OTUI::Widget const& widget, int x, int y);
+    void drawBorderImage(QPainter &painter, OTUI::Widget const &widget);
+    void drawBorderImage(QPainter &painter, OTUI::Widget const &widget, int x, int y);
     void drawOutlines(QPainter &painter, int left, int top, int width, int height);
     void drawPivots(QPainter &painter, int left, int top, int width, int height);
 

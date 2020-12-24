@@ -22,6 +22,7 @@ SOURCES += \
         corewindow.cpp \
         elidedlabel.cpp \
         events/setidevent.cpp \
+        events/settingssavedevent.cpp \
         imagesourcebrowser.cpp \
         main.cpp \
         openglwidget.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
         otui/mainwindow.cpp \
         otui/project.cpp \
         otui/widget.cpp \
+        projectsettings.cpp \
         recentproject.cpp \
         startupwindow.cpp
 
@@ -40,6 +42,7 @@ HEADERS += \
         corewindow.h \
         elidedlabel.h \
         events/setidevent.h \
+        events/settingssavedevent.h \
         imagesourcebrowser.h \
         openglwidget.h \
         otui/button.h \
@@ -50,6 +53,7 @@ HEADERS += \
         otui/otui.h \
         otui/project.h \
         otui/widget.h \
+        projectsettings.h \
         recentproject.h \
         startupwindow.h
 

@@ -14,7 +14,7 @@ public:
     explicit ElidedLabel(const QString &text, QWidget *parent = 0);
 
     void setText(const QString &text);
-    const QString & text() const { return content; }
+    const QString  &text() const { return content; }
     bool isElided() const { return elided; }
 
 protected:

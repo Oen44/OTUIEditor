@@ -6,10 +6,15 @@
 #include <QStandardItem>
 #include <QItemSelectionModel>
 #include <QKeyEvent>
+
 #include "otui/otui.h"
+
 #include "events/setidevent.h"
+#include "events/settingssavedevent.h"
+
 #include "imagesourcebrowser.h"
 #include "elidedlabel.h"
+#include "projectsettings.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,8 +29,8 @@ public:
     ~CoreWindow();
     static void ShowError(QString title, QString description);
 
-    void startNewProject(QString name, QString path);
-    void loadProjectData(QDataStream& data, QString path);
+    void startNewProject(QString fileName, QString name, QString path, QString dataPath);
+    void loadProjectData(QDataStream &data, QString fileName, QString path);
 
 private slots:
     void on_newMainWindow_triggered();
@@ -50,29 +55,32 @@ private slots:
 
     void on_newUICreature_triggered();
 
+    void on_actionProject_Settings_triggered();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
-    void keyReleaseEvent(QKeyEvent* event);
-    bool event(QEvent* event);
-    void closeEvent(QCloseEvent* event);
+    void keyReleaseEvent(QKeyEvent *event);
+    bool event(QEvent *event);
+    void closeEvent(QCloseEvent *event);
     void resizeEvent(QResizeEvent *event);
+
+private:
+    void initializeWindow();
+    void setProjectChanged(bool v);
 
 private:
     Ui::MainWindow *ui;
 
-    OTUI::Project m_Project;
+    OTUI::Project *m_Project = nullptr;
 
-    QStandardItemModel* model = nullptr;
+    QStandardItemModel *model = nullptr;
 
     void addChildToTree(QString label);
     void selectWidgetById(QString widgetId);
 
-    void loadSettings();
-    void saveSettings();
-    QString m_sSettingsFile;
-
-    OTUI::Widget* m_selected = nullptr;
-    ImageSourceBrowser* imagesBrowser;
+    OTUI::Widget *m_selected = nullptr;
+    ImageSourceBrowser *imagesBrowser = nullptr;
+    ProjectSettings *m_projectSettings = nullptr;
 };
 
 #endif // COREWINDOW_H

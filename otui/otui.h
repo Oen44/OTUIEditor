@@ -15,13 +15,6 @@ namespace OTUI {
     class MainWindow;
     class Button;
     class Label;
-    enum WidgetType {
-        MainWindowType,
-        ButtonType,
-        LabelType,
-        ItemType,
-        CreatureType
-    };
 }
 
 #endif // OTUICONST_H

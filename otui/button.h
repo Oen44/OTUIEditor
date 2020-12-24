@@ -13,12 +13,12 @@ namespace OTUI {
 
     private:
         QString getText() const { return m_text; }
-        void setText(const QString& text) {
+        void setText(const QString &text) {
             m_text = text;
         }
 
     public:
-        void draw(QPainter& painter);
+        void draw(QPainter &painter);
 
     private:
         QString m_text = "Button";

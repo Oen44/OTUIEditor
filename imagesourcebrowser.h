@@ -18,24 +18,22 @@ public:
     explicit ImageSourceBrowser(QWidget *parent = nullptr);
     ~ImageSourceBrowser();
 
-signals:
-
 private slots:
     void handleCloseButton();
     void onItemClicked(QTreeWidgetItem *item, int column);
 
 private:
-    void recursivelyGetDirectory(QString path, QTreeWidgetItem* parent);
+    void recursivelyGetDirectory(QString path, QTreeWidgetItem *parent);
     void addImageToGrid(QString title, QString path);
 
-    QFrame* topBar;
-    QLabel* titleLabel;
-    QPushButton* closeButton;
-    QWidget* contentPanel;
-    QScrollArea* rightPanel;
-    QTreeWidget* directoryList;
-    QGridLayout* imagesGridLayout;
-    QWidget* imagesGrid;
+    QFrame *topBar;
+    QLabel *titleLabel;
+    QPushButton *closeButton;
+    QWidget *contentPanel;
+    QScrollArea *rightPanel;
+    QTreeWidget *directoryList;
+    QGridLayout *imagesGridLayout;
+    QWidget *imagesGrid;
 };
 
 #endif // IMAGESOURCEBROWSER_H

@@ -16,7 +16,7 @@ OTUI::Label::~Label()
 
 }
 
-void OTUI::Label::draw(QPainter& painter)
+void OTUI::Label::draw(QPainter &painter)
 {
     painter.save();
     painter.setPen(getColor());
