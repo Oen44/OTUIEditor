@@ -63,7 +63,7 @@ namespace OTUI {
         QPoint getSizeProperty() const { return QPoint(width(), height()); }
         void setSizeProperty(const QPoint &size);
 
-        QImage image() const { return m_image; }
+        QPixmap image() const { return m_image; }
 
         int x() const { return m_rect.x(); }
         int y() const { return m_rect.y(); }
@@ -114,7 +114,7 @@ namespace OTUI {
 
     protected:
 
-        QImage m_image;
+        QPixmap m_image;
         QPoint m_imageSize;
         QRect m_imageCrop;
         QRect m_imageBorder;

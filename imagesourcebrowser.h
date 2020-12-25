@@ -4,12 +4,11 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
-#include <QScrollArea>
 #include <QGridLayout>
 #include <QTreeWidget>
 #include <QDirIterator>
 #include <QPixmap>
-#include <QtDebug>
+#include <QTableWidget>
 
 class ImageSourceBrowser : public QFrame
 {
@@ -22,6 +21,12 @@ private slots:
     void handleCloseButton();
     void onItemClicked(QTreeWidgetItem *item, int column);
 
+public:
+    void initialize();
+    void refresh();
+
+    QString m_DataPath;
+
 private:
     void recursivelyGetDirectory(QString path, QTreeWidgetItem *parent);
     void addImageToGrid(QString title, QString path);
@@ -30,10 +35,11 @@ private:
     QLabel *titleLabel;
     QPushButton *closeButton;
     QWidget *contentPanel;
-    QScrollArea *rightPanel;
     QTreeWidget *directoryList;
-    QGridLayout *imagesGridLayout;
-    QWidget *imagesGrid;
+    QTableWidget *imagesGrid;
+
+    int m_lastCol = 0;
+    int m_lastRow = 0;
 };
 
 #endif // IMAGESOURCEBROWSER_H

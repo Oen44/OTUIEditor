@@ -1,6 +1,17 @@
 #include "imagesourcebrowser.h"
 
+#include <QPixmapCache>
+#include <QHeaderView>
+
 ImageSourceBrowser::ImageSourceBrowser(QWidget *parent) : QFrame(parent)
+{
+}
+
+ImageSourceBrowser::~ImageSourceBrowser()
+{
+}
+
+void ImageSourceBrowser::initialize()
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setSpacing(0);
@@ -65,7 +76,7 @@ ImageSourceBrowser::ImageSourceBrowser(QWidget *parent) : QFrame(parent)
     directoryList->addTopLevelItem(topLevelItem);
     topLevelItem->setText(0, "data");
 
-    QDirIterator it("D:/Projects/Tibia/Revolution/otclientv8/data", QDir::NoDotAndDotDot | QDir::Dirs);
+    QDirIterator it(m_DataPath, QDir::NoDotAndDotDot | QDir::Dirs);
     while (it.hasNext()) {
         QString n = it.next();
         QTreeWidgetItem *item = new QTreeWidgetItem(topLevelItem);
@@ -76,28 +87,41 @@ ImageSourceBrowser::ImageSourceBrowser(QWidget *parent) : QFrame(parent)
     topLevelItem->setExpanded(true);
 
     // Right
-
-    rightPanel = new QScrollArea(contentPanel);
-    rightPanel->setObjectName("rightBrowserPanel");
-    rightPanel->setAlignment(Qt::AlignHCenter);
-
-    imagesGrid = new QWidget();
+    imagesGrid = new QTableWidget(contentPanel);
+    imagesGrid->setShowGrid(false);
     imagesGrid->setObjectName("imagesBrowserGrid");
-    rightPanel->setWidget(imagesGrid);
 
-    imagesGridLayout = new QGridLayout(imagesGrid);
-    imagesGridLayout->setMargin(5);
-    imagesGridLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-    //
+    imagesGrid->horizontalHeader()->setDefaultSectionSize(148);
+    imagesGrid->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    imagesGrid->horizontalHeader()->hide();
+
+    imagesGrid->verticalHeader()->setDefaultSectionSize(158);
+    imagesGrid->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    imagesGrid->verticalHeader()->hide();
 
     contentLayout->addWidget(directoryList, 0, 0);
-    contentLayout->addWidget(rightPanel, 0, 1);
+    contentLayout->addWidget(imagesGrid, 0, 1);
 
     layout->addWidget(contentPanel);
 }
 
-ImageSourceBrowser::~ImageSourceBrowser()
+void ImageSourceBrowser::refresh()
 {
+    delete directoryList->takeTopLevelItem(0);
+
+    QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(directoryList);
+    directoryList->addTopLevelItem(topLevelItem);
+    topLevelItem->setText(0, "data");
+
+    QDirIterator it(m_DataPath, QDir::NoDotAndDotDot | QDir::Dirs);
+    while (it.hasNext()) {
+        QString n = it.next();
+        QTreeWidgetItem *item = new QTreeWidgetItem(topLevelItem);
+        item->setText(0, n.right(n.length() - n.lastIndexOf("/") - 1));
+        recursivelyGetDirectory(n, item);
+    }
+
+    topLevelItem->setExpanded(true);
 }
 
 void ImageSourceBrowser::handleCloseButton()
@@ -107,9 +131,12 @@ void ImageSourceBrowser::handleCloseButton()
 
 void ImageSourceBrowser::onItemClicked(QTreeWidgetItem *item, int)
 {
-    qDeleteAll(imagesGrid->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly));
+    //qDeleteAll(imagesGrid->findChildren<QTableWidgetItem *>(QString(), Qt::FindDirectChildrenOnly));
+    imagesGrid->clearContents();
+    m_lastCol = 0;
+    m_lastRow = 0;
 
-    QString path("D:/Projects/Tibia/Revolution/otclientv8/data/");
+    QString path(m_DataPath + "/");
     if (item->text(0) != "data")
     {
         QTreeWidgetItem *parent = item->parent();
@@ -123,10 +150,17 @@ void ImageSourceBrowser::onItemClicked(QTreeWidgetItem *item, int)
     }
 
     QDirIterator it(path, QStringList() << "*.png", QDir::NoDotAndDotDot | QDir::Files);
+
+    imagesGrid->setColumnCount(4);
+    imagesGrid->setRowCount(255);
+    int items = 0;
     while (it.hasNext()) {
         QString n = it.next();
         addImageToGrid(n.right(n.length() - n.lastIndexOf("/") - 1), n);
+        items++;
     }
+    imagesGrid->setColumnCount(qMin(4, items));
+    imagesGrid->setRowCount(qMax(1, items / 4));
 }
 
 void ImageSourceBrowser::addImageToGrid(QString title, QString path)
@@ -134,13 +168,23 @@ void ImageSourceBrowser::addImageToGrid(QString title, QString path)
     QWidget *item = new QWidget;
     item->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     QVBoxLayout *itemLayout = new QVBoxLayout(item);
-    itemLayout->setMargin(0);
+    itemLayout->setMargin(5);
     itemLayout->setSpacing(4);
 
     QLabel *imageWidget = new QLabel;
+    imageWidget->setMinimumSize(128, 128);
     imageWidget->setAlignment(Qt::AlignCenter);
-    QPixmap pic(path);
-    imageWidget->setPixmap(pic);
+    QPixmap pic;
+    if (!QPixmapCache::find(path, &pic)) {
+        pic.load(path);
+        QPixmapCache::insert(path, pic);
+    }
+    if (pic.width() >= pic.height() && pic.width() > 128)
+        imageWidget->setPixmap(pic.scaledToWidth(128));
+    else if(pic.height() >= pic.width() && pic.height() > 128)
+        imageWidget->setPixmap(pic.scaledToHeight(128));
+    else
+        imageWidget->setPixmap(pic);
 
     QLabel *imageTitle = new QLabel(title);
     imageTitle->setAlignment(Qt::AlignCenter);
@@ -148,7 +192,13 @@ void ImageSourceBrowser::addImageToGrid(QString title, QString path)
     itemLayout->addWidget(imageWidget);
     itemLayout->addWidget(imageTitle);
 
-    imagesGridLayout->addWidget(item, imagesGridLayout->count() > 0 ? imagesGridLayout->count() / 2 : 0, imagesGridLayout->count() % 2 == 0 ? 0 : 1);
+    if(m_lastCol == 4)
+    {
+        m_lastRow++;
+        m_lastCol = 0;
+    }
+
+    imagesGrid->setCellWidget(m_lastRow, m_lastCol++, item);
 }
 
 void ImageSourceBrowser::recursivelyGetDirectory(QString path, QTreeWidgetItem *parent)

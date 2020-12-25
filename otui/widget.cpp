@@ -1,11 +1,13 @@
 #include "widget.h"
 #include "corewindow.h"
 
+#include <QPixmapCache>
+
 OTUI::Widget::Widget() : m_id("widgetid")
 {
     m_parent = nullptr;
     m_font = QFont("Verdana", 11);
-    m_color = QColor("#dfdfdf");
+    m_color = QColor(223, 223, 223);
 }
 
 OTUI::Widget::Widget(QString widgetId)
@@ -16,7 +18,7 @@ OTUI::Widget::Widget(QString widgetId)
     m_rect = QRect(0, 0, 32, 32);
     m_imageCrop.setRect(0, 0, -1, -1);
     m_font = QFont("Verdana", 11);
-    m_color = QColor("#dfdfdf");
+    m_color = QColor(223, 223, 223);
 }
 
 OTUI::Widget::Widget(QString widgetId, QString imagePath)
@@ -24,13 +26,18 @@ OTUI::Widget::Widget(QString widgetId, QString imagePath)
     m_parent = nullptr;
     m_id.clear();
     m_id.append(widgetId);
-    if(imagePath != nullptr)
-        m_image.load(imagePath);
+    if(!imagePath.isEmpty())
+    {
+        if (!QPixmapCache::find(imagePath, &m_image)) {
+            m_image.load(imagePath);
+            QPixmapCache::insert(imagePath, m_image);
+        }
+    }
     m_imageSize = QPoint(m_image.width(), m_image.height());
     m_rect = QRect(0, 0, m_image.width(), m_image.height());
-    m_imageCrop.setRect(0, 0, -1, -1);
+    m_imageCrop.setRect(0, 0, m_image.width(), m_image.height());
     m_font = QFont("Verdana", 11);
-    m_color = QColor("#dfdfdf");
+    m_color = QColor(223, 223, 223);
 }
 
 void OTUI::Widget::setId(const QString id) {

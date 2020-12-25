@@ -39,6 +39,9 @@ void CoreWindow::initializeWindow()
         }
     });
 
+    imagesBrowser = new ImageSourceBrowser(ui->centralWidget);
+    imagesBrowser->hide();
+
     ElidedLabel *imageSourceLabel = new ElidedLabel("/images/ui/window.png", ui->ispContent);
     ui->ispContent->layout()->addWidget(imageSourceLabel);
 
@@ -49,15 +52,7 @@ void CoreWindow::initializeWindow()
     ui->ispContent->layout()->addWidget(imageSourceOpen);
 
     connect(imageSourceOpen, &QPushButton::pressed, [=]() {
-        if(!imagesBrowser)
-        {
-            imagesBrowser = new ImageSourceBrowser(ui->centralWidget);
-            imagesBrowser->show();
-        }
-        else if(!imagesBrowser->isVisible())
-        {
-            imagesBrowser->show();
-        }
+        imagesBrowser->show();
         imagesBrowser->move(this->rect().center() - imagesBrowser->rect().center());
     });
 
@@ -83,6 +78,8 @@ void CoreWindow::startNewProject(QString fileName, QString name, QString path, Q
     setWindowTitle(name + " - OTUI Editor");
     m_projectSettings->setProjectName(name);
     m_projectSettings->setDataPath(dataPath);
+    imagesBrowser->m_DataPath = m_Project->getDataPath();
+    imagesBrowser->initialize();
 }
 
 void CoreWindow::loadProjectData(QDataStream &data, QString fileName, QString path)
@@ -98,6 +95,8 @@ void CoreWindow::loadProjectData(QDataStream &data, QString fileName, QString pa
     setWindowTitle(m_Project->getProjectName() + " - OTUI Editor");
     m_projectSettings->setProjectName(m_Project->getProjectName());
     m_projectSettings->setDataPath(m_Project->getDataPath());
+    imagesBrowser->m_DataPath = m_Project->getDataPath();
+    imagesBrowser->initialize();
 }
 
 bool CoreWindow::event(QEvent *event)
@@ -119,6 +118,8 @@ bool CoreWindow::event(QEvent *event)
     {
         m_Project->setProjectName(m_projectSettings->getProjectName());
         m_Project->setDataPath(m_projectSettings->getDataPath());
+        imagesBrowser->m_DataPath = m_Project->getDataPath();
+        imagesBrowser->refresh();
         setProjectChanged(true);
         break;
     }
@@ -393,7 +394,7 @@ void CoreWindow::on_newMainWindow_triggered()
         selectWidgetById(item->text());
     }
 
-    m_selected = ui->openGLWidget->addWidget<OTUI::MainWindow>(widgetId, ":/images/main_window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
+    m_selected = ui->openGLWidget->addWidget<OTUI::MainWindow>(widgetId, m_Project->getDataPath() + "/images/ui/window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
     setProjectChanged(true);
 }
 
@@ -403,7 +404,7 @@ void CoreWindow::on_newButton_triggered()
     if(index.isValid())
     {
         QString widgetId("button");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Button>("mainWindow", widgetId, ":/images/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Button>("mainWindow", widgetId, m_Project->getDataPath() + "/images/ui/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }
@@ -415,7 +416,7 @@ void CoreWindow::on_newLabel_triggered()
     if(index.isValid())
     {
         QString widgetId("label");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Label>("mainWindow", widgetId, nullptr, QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Label>("mainWindow", widgetId, "", QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }
@@ -427,7 +428,7 @@ void CoreWindow::on_newUIItem_triggered()
     if(index.isValid())
     {
         QString widgetId("item");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Item>("mainWindow", widgetId, nullptr, QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Item>("mainWindow", widgetId, "", QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }
@@ -439,7 +440,7 @@ void CoreWindow::on_newUICreature_triggered()
     if(index.isValid())
     {
         QString widgetId("creature");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Creature>("mainWindow", widgetId, nullptr, QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Creature>("mainWindow", widgetId, "", QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }

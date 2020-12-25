@@ -38,8 +38,8 @@ public:
 
         m_selected = widget.get();
 
-        widget->setRect(rect);
-        widget->setImageCrop(imageCrop);
+        //widget->setRect(rect);
+        //widget->setImageCrop(imageCrop);
         widget->setImageBorder(imageBorder);
         m_otuiWidgets.emplace_back(std::move(widget));
 
@@ -75,7 +75,7 @@ public:
 
         m_selected = widget.get();
 
-        widget->setRect(rect);
+        //widget->setRect(rect);
         widget->setImageCrop(imageCrop);
         widget->setImageBorder(imageBorder);
         widget->setParent(parent);

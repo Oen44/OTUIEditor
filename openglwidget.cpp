@@ -43,9 +43,9 @@ void OpenGLWidget::paintGL()
             if(widget->getImageBorder().isNull())
             {
                 if(parent)
-                    painter.drawImage(widget->getPos() + parent->getPos(), widget->image(), widget->getImageCrop());
+                    painter.drawPixmap(widget->getPos() + parent->getPos(), widget->image(), widget->getImageCrop());
                 else
-                    painter.drawImage(*widget->getRect(), widget->image(), widget->getImageCrop());
+                    painter.drawPixmap(*widget->getRect(), widget->image(), widget->getImageCrop());
             }
             else
             {
@@ -330,32 +330,32 @@ void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const &widget
                            drawRect.top() + topBorder.height(),
                            centerSize.x(),
                            centerSize.y());
-        painter.drawImage(rectCoords, widget.image(), center);
+        painter.drawPixmap(rectCoords, widget.image(), center);
     }
     // top left corner
     rectCoords = QRect(drawRect.topLeft(), topLeftCorner.size());
-    painter.drawImage(rectCoords, widget.image(), topLeftCorner);
+    painter.drawPixmap(rectCoords, widget.image(), topLeftCorner);
     // top
     rectCoords = QRect(drawRect.left() + topLeftCorner.width(), drawRect.topLeft().y(), centerSize.x(), topBorder.height());
-    painter.drawImage(rectCoords, widget.image(), topBorder);
+    painter.drawPixmap(rectCoords, widget.image(), topBorder);
     // top right corner
     rectCoords = QRect(QPoint(drawRect.left() + topLeftCorner.width() + centerSize.x(), drawRect.top()), topRightCorner.size());
-    painter.drawImage(rectCoords, widget.image(), topRightCorner);
+    painter.drawPixmap(rectCoords, widget.image(), topRightCorner);
     // left
     rectCoords = QRect(drawRect.left(), drawRect.top() + topLeftCorner.height(), leftBorder.width(), centerSize.y());
-    painter.drawImage(rectCoords, widget.image(), leftBorder);
+    painter.drawPixmap(rectCoords, widget.image(), leftBorder);
     // right
     rectCoords = QRect(drawRect.left() + leftBorder.width() + centerSize.x(), drawRect.top() + topRightCorner.height(), rightBorder.width(), centerSize.y());
-    painter.drawImage(rectCoords, widget.image(), rightBorder);
+    painter.drawPixmap(rectCoords, widget.image(), rightBorder);
     // bottom left corner
     rectCoords = QRect(QPoint(drawRect.left(), drawRect.top() + topLeftCorner.height() + centerSize.y()), bottomLeftCorner.size());
-    painter.drawImage(rectCoords, widget.image(), bottomLeftCorner);
+    painter.drawPixmap(rectCoords, widget.image(), bottomLeftCorner);
     // bottom
     rectCoords = QRect(drawRect.left() + bottomLeftCorner.width(), drawRect.top() + topBorder.height() + centerSize.y(), centerSize.x(), bottomBorder.height());
-    painter.drawImage(rectCoords, widget.image(), bottomBorder);
+    painter.drawPixmap(rectCoords, widget.image(), bottomBorder);
     // bottom right corner
     rectCoords = QRect(QPoint(drawRect.left() + bottomLeftCorner.width() + centerSize.x(), drawRect.top() + topRightCorner.height() + centerSize.y()), bottomRightCorner.size());
-    painter.drawImage(rectCoords, widget.image(), bottomRightCorner);
+    painter.drawPixmap(rectCoords, widget.image(), bottomRightCorner);
 }
 
 void OpenGLWidget::drawOutlines(QPainter &painter, int left, int top, int width, int height)

@@ -32,6 +32,12 @@ ElidedLabel {
     image: url(":/images/branch_open.png");
 }
 
+/* Table Start */
+QTableWidget {
+    selection-background-color: #545454;
+}
+/* Table End */
+
 /* Images Browser Start */
 ImageSourceBrowser {
     background-color: #121212;
