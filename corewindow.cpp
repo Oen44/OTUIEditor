@@ -101,9 +101,7 @@ void CoreWindow::loadProjectData(QDataStream &data, QString fileName, QString pa
 
 bool CoreWindow::event(QEvent *event)
 {
-    switch(event->type())
-    {
-    case SetIdEvent::eventType:
+    if(event->type() == SetIdEvent::eventType)
     {
         SetIdEvent *setIdEvent = reinterpret_cast<SetIdEvent*>(event);
         QModelIndexList items = model->match(model->index(0, 0), Qt::DisplayRole, QVariant::fromValue(setIdEvent->oldId), 1, Qt::MatchRecursive);
@@ -112,20 +110,16 @@ bool CoreWindow::event(QEvent *event)
             model->itemFromIndex(items.at(0))->setText(setIdEvent->newId);
             setProjectChanged(true);
         }
-        break;
     }
-    case SettingsSavedEvent::eventType:
+    else if(event->type() == SettingsSavedEvent::eventType)
     {
         m_Project->setProjectName(m_projectSettings->getProjectName());
         m_Project->setDataPath(m_projectSettings->getDataPath());
         imagesBrowser->m_DataPath = m_Project->getDataPath();
         imagesBrowser->refresh();
         setProjectChanged(true);
-        break;
-    }
 
-    default:
-        return QMainWindow::event(event);
+        ui->openGLWidget->sendEvent(event);
     }
 
     return QMainWindow::event(event);
@@ -394,7 +388,7 @@ void CoreWindow::on_newMainWindow_triggered()
         selectWidgetById(item->text());
     }
 
-    m_selected = ui->openGLWidget->addWidget<OTUI::MainWindow>(widgetId, m_Project->getDataPath() + "/images/ui/window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
+    m_selected = ui->openGLWidget->addWidget<OTUI::MainWindow>(widgetId, m_Project->getDataPath(), "/images/ui/window.png", QRect(50, 50, 256, 256), QRect(0, 0, 256, 256), QRect(6, 27, 6, 6));
     setProjectChanged(true);
 }
 
@@ -404,7 +398,7 @@ void CoreWindow::on_newButton_triggered()
     if(index.isValid())
     {
         QString widgetId("button");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Button>("mainWindow", widgetId, m_Project->getDataPath() + "/images/ui/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Button>("mainWindow", widgetId, m_Project->getDataPath(), "/images/ui/button_rounded.png", QRect(50, 50, 106, 23), QRect(0, 0, 22, 23), QRect(5, 5, 5, 5));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }
@@ -416,7 +410,7 @@ void CoreWindow::on_newLabel_triggered()
     if(index.isValid())
     {
         QString widgetId("label");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Label>("mainWindow", widgetId, "", QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Label>("mainWindow", widgetId, m_Project->getDataPath(), "", QRect(0, 0, 106, 23), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }
@@ -428,7 +422,7 @@ void CoreWindow::on_newUIItem_triggered()
     if(index.isValid())
     {
         QString widgetId("item");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Item>("mainWindow", widgetId, "", QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Item>("mainWindow", widgetId, m_Project->getDataPath(), "", QRect(0, 0, 32, 32), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }
@@ -440,7 +434,7 @@ void CoreWindow::on_newUICreature_triggered()
     if(index.isValid())
     {
         QString widgetId("creature");
-        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Creature>("mainWindow", widgetId, "", QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
+        m_selected = ui->openGLWidget->addWidgetChild<OTUI::Creature>("mainWindow", widgetId, m_Project->getDataPath(), "", QRect(0, 0, 48, 48), QRect(0, 0, 0, 0), QRect(0, 0, 0, 0));
         addChildToTree(m_selected->getId());
         setProjectChanged(true);
     }

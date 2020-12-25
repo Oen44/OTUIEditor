@@ -10,7 +10,7 @@ namespace OTUI {
     {
     public:
         Label();
-        Label(QString widgetId, QString imagePath);
+        Label(QString widgetId, QString dataPath, QString imagePath);
         ~Label();
 
     private:

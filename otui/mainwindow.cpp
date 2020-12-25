@@ -4,7 +4,7 @@ OTUI::MainWindow::MainWindow() : Widget()
 {
 }
 
-OTUI::MainWindow::MainWindow(QString widgetId, QString imagePath) : Widget(widgetId, imagePath)
+OTUI::MainWindow::MainWindow(QString widgetId, QString dataPath, QString imagePath) : Widget(widgetId, dataPath, imagePath)
 {
 }
 

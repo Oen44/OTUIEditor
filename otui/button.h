@@ -8,7 +8,7 @@ namespace OTUI {
     {
     public:
         Button();
-        Button(QString widgetId, QString imagePath);
+        Button(QString widgetId, QString dataPath, QString imagePath);
         ~Button();
 
     private:

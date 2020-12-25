@@ -10,7 +10,7 @@ OTUI::Creature::Creature(QString widgetId) : Widget(widgetId)
     m_parent = nullptr;
 }
 
-OTUI::Creature::Creature(QString widgetId, QString imagePath) : Widget(widgetId, imagePath)
+OTUI::Creature::Creature(QString widgetId, QString dataPath, QString imagePath) : Widget(widgetId, dataPath, imagePath)
 {
     m_parent = nullptr;
 }

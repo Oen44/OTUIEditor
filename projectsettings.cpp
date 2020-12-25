@@ -141,6 +141,7 @@ void ProjectSettings::handleDataBrowse()
 void ProjectSettings::handleSaveButton()
 {
     SettingsSavedEvent *event = new SettingsSavedEvent();
+    event->dataPath = getDataPath();
     qApp->postEvent(qApp->activeWindow(), event);
     this->hide();
 }

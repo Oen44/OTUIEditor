@@ -26,9 +26,9 @@ protected:
 
 public:
     template <class T>
-    OTUI::Widget *addWidget(QString widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
+    OTUI::Widget *addWidget(QString widgetId, QString dataPath, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
     {
-        std::unique_ptr<OTUI::Widget> widget = initializeWidget<T>(widgetId, imagePath);
+        std::unique_ptr<OTUI::Widget> widget = initializeWidget<T>(widgetId, dataPath, imagePath);
 
         if(widget == nullptr)
         {
@@ -47,7 +47,7 @@ public:
     }
 
     template <class T>
-    OTUI::Widget *addWidgetChild(QString parentId, QString &widgetId, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
+    OTUI::Widget *addWidgetChild(QString parentId, QString &widgetId, QString dataPath, QString imagePath, QRect rect, QRect imageCrop, QRect imageBorder)
     {
         OTUI::Widget *parent = nullptr;
         for(auto &w : m_otuiWidgets)
@@ -65,7 +65,7 @@ public:
             return nullptr;
         }
 
-        std::unique_ptr<OTUI::Widget> widget = initializeWidget<T>(widgetId, imagePath);
+        std::unique_ptr<OTUI::Widget> widget = initializeWidget<T>(widgetId, dataPath, imagePath);
 
         if(widget == nullptr)
         {
@@ -98,15 +98,17 @@ public:
         m_otuiWidgets.clear();
     }
 
+    void sendEvent(QEvent *event);
+
     OTUI::Widget *m_selected = nullptr;
 
     double scale;
 
 private:
     template <class T>
-    std::unique_ptr<T> initializeWidget(QString widgetId, QString imagePath)
+    std::unique_ptr<T> initializeWidget(QString widgetId, QString dataPath, QString imagePath)
     {
-        std::unique_ptr<T> widget = std::make_unique<T>(widgetId, imagePath);
+        std::unique_ptr<T> widget = std::make_unique<T>(widgetId, dataPath, imagePath);
 
         uint8_t found = 0;
 

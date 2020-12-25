@@ -21,16 +21,18 @@ OTUI::Widget::Widget(QString widgetId)
     m_color = QColor(223, 223, 223);
 }
 
-OTUI::Widget::Widget(QString widgetId, QString imagePath)
+OTUI::Widget::Widget(QString widgetId, QString dataPath, QString imagePath)
 {
     m_parent = nullptr;
     m_id.clear();
     m_id.append(widgetId);
-    if(!imagePath.isEmpty())
+    m_imageSource = imagePath;
+    QString fullImagePath(dataPath + "/" + imagePath);
+    if(!fullImagePath.isEmpty())
     {
-        if (!QPixmapCache::find(imagePath, &m_image)) {
-            m_image.load(imagePath);
-            QPixmapCache::insert(imagePath, m_image);
+        if (!QPixmapCache::find(fullImagePath, &m_image)) {
+            m_image.load(fullImagePath);
+            QPixmapCache::insert(fullImagePath, m_image);
         }
     }
     m_imageSize = QPoint(m_image.width(), m_image.height());
@@ -38,6 +40,24 @@ OTUI::Widget::Widget(QString widgetId, QString imagePath)
     m_imageCrop.setRect(0, 0, m_image.width(), m_image.height());
     m_font = QFont("Verdana", 11);
     m_color = QColor(223, 223, 223);
+}
+
+void OTUI::Widget::event(QEvent *event)
+{
+    if(event->type() == SettingsSavedEvent::eventType)
+    {
+        SettingsSavedEvent *settings = reinterpret_cast<SettingsSavedEvent*>(event);
+        QString fullImagePath(settings->dataPath + "/" + m_imageSource);
+        if(!fullImagePath.isEmpty())
+        {
+            if (!QPixmapCache::find(fullImagePath, &m_image)) {
+                m_image.load(fullImagePath);
+                QPixmapCache::insert(fullImagePath, m_image);
+            }
+        }
+        m_imageSize = QPoint(m_image.width(), m_image.height());
+        m_imageCrop.setRect(0, 0, m_image.width(), m_image.height());
+    }
 }
 
 void OTUI::Widget::setId(const QString id) {

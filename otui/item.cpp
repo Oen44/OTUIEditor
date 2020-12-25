@@ -10,7 +10,7 @@ OTUI::Item::Item(QString widgetId) : Widget(widgetId)
     m_parent = nullptr;
 }
 
-OTUI::Item::Item(QString widgetId, QString imagePath) : Widget(widgetId, imagePath)
+OTUI::Item::Item(QString widgetId, QString dataPath, QString imagePath) : Widget(widgetId, dataPath, imagePath)
 {
     m_parent = nullptr;
 }

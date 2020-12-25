@@ -6,7 +6,7 @@ OTUI::Label::Label() : Widget()
 
 }
 
-OTUI::Label::Label(QString widgetId, QString imagePath) : Widget(widgetId, imagePath)
+OTUI::Label::Label(QString widgetId, QString dataPath, QString imagePath) : Widget(widgetId, dataPath, imagePath)
 {
 
 }

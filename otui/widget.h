@@ -2,7 +2,6 @@
 #define OTUIWIDGET_H
 
 #include <memory>
-#include <QObject>
 #include <QImage>
 #include <QPainter>
 #include <QVector2D>
@@ -21,31 +20,18 @@ namespace OTUI {
         T bottom;
         T left;
     };
-    class Widget : public QObject
+    class Widget
     {
     public:
         Widget();
         Widget(QString widgetId);
-        Widget(QString widgetId, QString imagePath);
+        Widget(QString widgetId, QString dataPath, QString imagePath);
         virtual ~Widget() = default;
 
     public:
         virtual void draw(QPainter&) {}
 
-    protected:
-        QString m_id;
-        QRect m_rect;
-        QPoint m_virtualOffset;
-        bool m_enabled;
-        bool m_visible = true;
-        bool m_focusable = true;
-        bool m_fixedSize = false;
-        bool m_phantom = false;
-        bool m_draggable = false;
-        bool m_destroyed = false;
-        bool m_clipping = false;
-
-        OTUI::Widget *m_parent;
+        void event(QEvent *event);
 
     public:
         bool operator == (const Widget &Ref) const
@@ -113,7 +99,21 @@ namespace OTUI {
         QColor getColor() const { return m_color; }
 
     protected:
+        OTUI::Widget *m_parent;
 
+        QString m_id;
+        QRect m_rect;
+        QPoint m_virtualOffset;
+        bool m_enabled;
+        bool m_visible = true;
+        bool m_focusable = true;
+        bool m_fixedSize = false;
+        bool m_phantom = false;
+        bool m_draggable = false;
+        bool m_destroyed = false;
+        bool m_clipping = false;
+
+        QString m_imageSource;
         QPixmap m_image;
         QPoint m_imageSize;
         QRect m_imageCrop;

@@ -4,6 +4,8 @@
 #include <QEvent>
 #include <QVariant>
 
+#include "projectsettings.h"
+
 class SettingsSavedEvent : public QEvent
 {
 public:
@@ -12,5 +14,7 @@ public:
 
 public:
     static const QEvent::Type eventType = static_cast<QEvent::Type>(1021);
+
+    QString dataPath;
 };
 #endif // SETTINGSSAVEDEVENT_H

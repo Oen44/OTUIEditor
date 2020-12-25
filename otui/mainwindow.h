@@ -8,7 +8,7 @@ namespace OTUI {
     {
     public:
         MainWindow();
-        MainWindow(QString widgetId, QString imagePath);
+        MainWindow(QString widgetId, QString dataPath, QString imagePath);
         ~MainWindow();
 
     private:

@@ -296,6 +296,14 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
+void OpenGLWidget::sendEvent(QEvent *event)
+{
+    for(auto const &widget : m_otuiWidgets)
+    {
+        widget->event(event);
+    }
+}
+
 void OpenGLWidget::drawBorderImage(QPainter &painter, OTUI::Widget const &widget)
 {
     drawBorderImage(painter, widget, widget.x(), widget.y());
